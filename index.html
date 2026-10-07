@@ -780,7 +780,7 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <a class="btn btn-primary nav-cta" href="#contact">Get a free review</a>
+      <a class="btn btn-primary nav-cta" href="#portal" data-trb-portal>Client Portal / Login</a>
 
       <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -794,7 +794,7 @@
       <a href="#how-it-works">How it works</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
-      <a class="btn btn-primary" href="#contact">Get a free review</a>
+      <a class="btn btn-primary" href="#portal" data-trb-portal>Client Portal / Login</a>
     </div>
   </header>
 
@@ -1413,6 +1413,78 @@
   document.getElementById("trbSignIn").onclick=async()=>{
     msg.textContent="Signing in…";
     const {data,error}=await supabaseClient.auth.signInWithPassword({email:document.getElementById("trbLoginEmail").value.trim(),password:document.getElementById("trbLoginPassword").value});
+    if(error){msg.textContent=error.message;return}
+    await afterLogin(data.user);
+  };
+  document.getElementById("trbClientChoice").onclick=()=>location.href="client-portal.html";
+  document.getElementById("trbAdminChoice").onclick=()=>location.href="admin-portal.html";
+  document.getElementById("trbChooserClose").onclick=()=>location.href="client-portal.html";
+})();
+</script>
+
+
+<!-- TaxReady Books Client/Admin Login -->
+<style>
+  .trb-login-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(27,31,59,.68);backdrop-filter:blur(6px)}
+  .trb-login-overlay.open{display:flex}
+  .trb-login-modal,.trb-chooser-card{width:min(520px,100%);background:#fff;border-radius:22px;padding:30px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
+  .trb-login-modal h2,.trb-chooser-card h2{margin:0 0 8px}
+  .trb-login-modal p,.trb-chooser-card>p{color:#687084}
+  .trb-login-modal label{display:grid;gap:7px;margin:14px 0}
+  .trb-login-modal input{width:100%;box-sizing:border-box}
+  .trb-login-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .trb-login-message{min-height:22px;font-size:.9rem}
+  .trb-chooser{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(27,31,59,.68);backdrop-filter:blur(6px)}
+  .trb-chooser.open{display:flex}
+  .trb-choice{width:100%;text-align:left;border:1px solid #DDE2EA;background:#fff;border-radius:15px;padding:17px;margin-top:10px;cursor:pointer}
+  .trb-choice strong{display:block}.trb-choice span{display:block;color:#687084;font-size:.86rem;margin-top:3px}
+  .trb-close{width:100%;margin-top:14px}
+</style>
+<div id="trbLoginOverlay" class="trb-login-overlay" role="dialog" aria-modal="true">
+  <div class="trb-login-modal">
+    <h2>Client Portal Login</h2>
+    <p>Sign in to access your TaxReady Books portal.</p>
+    <label>Email<input id="trbLoginEmail" type="email" autocomplete="email"></label>
+    <label>Password<input id="trbLoginPassword" type="password" autocomplete="current-password"></label>
+    <div class="trb-login-actions">
+      <button class="btn btn-dark" id="trbSignIn">Sign in</button>
+      <button class="btn btn-secondary" id="trbCancelLogin">Cancel</button>
+    </div>
+    <p id="trbLoginMessage" class="trb-login-message" aria-live="polite"></p>
+  </div>
+</div>
+<div id="trbChooser" class="trb-chooser" role="dialog" aria-modal="true">
+  <div class="trb-chooser-card">
+    <h2>Welcome to TaxReady Books</h2>
+    <p>Choose where you would like to go.</p>
+    <button class="trb-choice" id="trbClientChoice"><strong>Client Portal</strong><span>View your documents, messages, and profile.</span></button>
+    <button class="trb-choice" id="trbAdminChoice" style="display:none"><strong>Admin Portal</strong><span>Manage clients, documents, messages, and reviews.</span></button>
+    <button class="btn btn-secondary trb-close" id="trbChooserClose">Continue to Client Portal</button>
+  </div>
+</div>
+<script>
+(function(){
+  const url="https://dusqlktenzrlvczazlwb.supabase.co";
+  const key="sb_publishable_8_tfTYD-vnF1z-HukFr6_g_5gv2ICMQ";
+  const sb=window.supabase.createClient(url,key);
+  const login=document.getElementById("trbLoginOverlay");
+  const chooser=document.getElementById("trbChooser");
+  const msg=document.getElementById("trbLoginMessage");
+  function openLogin(){login.classList.add("open");msg.textContent="";document.getElementById("trbLoginEmail").focus()}
+  function closeLogin(){login.classList.remove("open")}
+  async function afterLogin(user){
+    const {data:profile}=await sb.from("profiles").select("role").eq("id",user.id).maybeSingle();
+    document.getElementById("trbAdminChoice").style.display=profile?.role==="admin"?"block":"none";
+    closeLogin(); chooser.classList.add("open");
+  }
+  document.querySelectorAll("[data-trb-portal]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();openLogin()}));
+  document.getElementById("trbCancelLogin").onclick=closeLogin;
+  document.getElementById("trbSignIn").onclick=async()=>{
+    msg.textContent="Signing in…";
+    const {data,error}=await sb.auth.signInWithPassword({
+      email:document.getElementById("trbLoginEmail").value.trim(),
+      password:document.getElementById("trbLoginPassword").value
+    });
     if(error){msg.textContent=error.message;return}
     await afterLogin(data.user);
   };
