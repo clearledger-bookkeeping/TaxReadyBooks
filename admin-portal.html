@@ -632,7 +632,7 @@
       error: profileError
     } = await sb
       .from("profiles")
-      .select("id, email, full_name, role")
+      .select("id, full_name, role")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -672,7 +672,7 @@
 
 
     adminEmail.textContent =
-      profile.email || user.email || "";
+      user.email || "";
 
     showAdmin();
 
@@ -828,7 +828,7 @@
       error
     } = await sb
       .from("profiles")
-      .select("id, email, full_name, role")
+      .select("id, full_name, role")
       .eq("role", "client")
       .order("created_at", {
         ascending: false
@@ -878,8 +878,7 @@
 
 
       const email =
-        client.email ||
-        "No email";
+        "Client account";
 
 
       div.innerHTML = `
