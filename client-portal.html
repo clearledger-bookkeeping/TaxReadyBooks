@@ -16,7 +16,50 @@
     .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
     .hidden{display:none}.muted{color:#66717c}.item{padding:15px 0;border-bottom:1px solid #e8ebee}.item:last-child{border-bottom:0}
     .msg{padding:10px;border-radius:8px;background:#eef5ff;margin:10px 0}
+
     a{color:#185abc}
+
+    /* Portal chooser */
+    .portal-overlay{
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:rgba(24,33,43,.62);
+      backdrop-filter:blur(5px);
+    }
+    .portal-overlay.hidden{display:none}
+    .portal-modal{
+      width:min(520px,100%);
+      background:#fff;
+      border-radius:20px;
+      padding:30px;
+      box-shadow:0 24px 70px rgba(0,0,0,.25);
+    }
+    .portal-modal h2{margin:0 0 8px}
+    .portal-modal p{margin:0 0 22px;color:#66717c}
+    .portal-options{display:grid;gap:12px}
+    .portal-option{
+      width:100%;
+      text-align:left;
+      padding:18px;
+      border:1px solid #dce1e6;
+      border-radius:14px;
+      background:#fff;
+      color:#18212b;
+    }
+    .portal-option:hover{background:#f6f7f9;border-color:#b9c1ca}
+    .portal-option strong{display:block;font-size:16px;margin-bottom:4px}
+    .portal-option span{display:block;font-size:13px;font-weight:400;color:#66717c}
+    .portal-close{
+      margin-top:14px;
+      width:100%;
+      background:#e9edf1;
+      color:#18212b;
+    }
   </style>
 </head>
 <body>
@@ -98,6 +141,27 @@
   </section>
 </div>
 
+<div id="portalChooser" class="portal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="portalChooserTitle">
+  <div class="portal-modal">
+    <h2 id="portalChooserTitle">Welcome to TaxReady Books</h2>
+    <p id="portalChooserText">Choose where you would like to go.</p>
+
+    <div class="portal-options">
+      <button class="portal-option" id="clientPortalChoice">
+        <strong>Client Portal</strong>
+        <span>View your documents, messages, and profile.</span>
+      </button>
+
+      <button class="portal-option hidden" id="adminPortalChoice">
+        <strong>Admin Portal</strong>
+        <span>Manage clients, documents, messages, and reviews.</span>
+      </button>
+    </div>
+
+    <button class="portal-close" id="closePortalChooser">Continue to Client Portal</button>
+  </div>
+</div>
+
 <script>
   const SUPABASE_URL = "https://dusqlktenzrlvczazlwb.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_8_tfTYD-vnF1z-HukFr6_g_5gv2ICMQ";
@@ -120,6 +184,27 @@
     $("portal").classList.remove("hidden");
     $("userEmail").textContent = user.email || "";
   }
+
+  function showPortalChooser(isAdmin){
+    $("adminPortalChoice").classList.toggle("hidden", !isAdmin);
+    $("portalChooser").classList.remove("hidden");
+  }
+
+  function hidePortalChooser(){
+    $("portalChooser").classList.add("hidden");
+  }
+
+  $("clientPortalChoice").onclick = () => {
+    hidePortalChooser();
+  };
+
+  $("adminPortalChoice").onclick = () => {
+    window.location.href = "admin-portal.html";
+  };
+
+  $("closePortalChooser").onclick = () => {
+    hidePortalChooser();
+  };
 
   $("signIn").onclick = async () => {
     $("authMessage").textContent = "Signing in…";
@@ -152,6 +237,7 @@
   };
 
   $("signOut").onclick = async () => {
+    hidePortalChooser();
     await sb.auth.signOut();
     showAuth("You are signed out.");
   };
@@ -171,6 +257,8 @@
       .maybeSingle();
 
     $("fullName").value = profile?.full_name || "";
+
+    showPortalChooser(profile?.role === "admin");
 
     const {data:docs,error:docError} = await sb
       .from("documents")
