@@ -216,8 +216,6 @@ button{border:0;border-radius:11px;padding:11px 16px;cursor:pointer;font:inherit
 
 
 
-    showPortalChooser(profile?.role === "admin");
-
     const {data:docs,error:docError} = await sb
       .from("documents")
       .select("id,title,description,storage_path,created_at")
