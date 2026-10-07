@@ -546,6 +546,9 @@
   const messageStatus =
     document.getElementById("messageStatus");
 
+  const videoCallBtn =
+    document.getElementById("videoCallBtn");
+
 
   /* =========================================================
      STATE
@@ -636,7 +639,7 @@
       error: profileError
     } = await sb
       .from("profiles")
-      .select("id, full_name, role")
+      .select("id, full_name, role, email")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -882,7 +885,8 @@
 
 
       const email =
-        "Client account";
+        client.email ||
+        "Email not registered yet";
 
 
       div.innerHTML = `
@@ -950,7 +954,7 @@
 
     selectedClientEmail.textContent =
       client.email ||
-      "";
+      "Email not registered yet";
 
 
     await loadDocuments();
@@ -1583,10 +1587,55 @@
   });
 
 
-  document.getElementById("videoCallBtn").addEventListener("click", function () {
+  videoCallBtn.addEventListener("click", async function () {
     if (!selectedClient) return;
+
     const room = "taxreadybooks-" + selectedClient.id.replace(/-/g,"");
-    window.open("https://meet.jit.si/" + room, "_blank", "noopener");
+    const joinUrl = "https://meet.jit.si/" + room;
+
+    videoCallBtn.disabled = true;
+    videoCallBtn.textContent = "Calling...";
+
+    try {
+      const {error:inviteError} = await sb.from("call_invites").insert({
+        client_id: selectedClient.id,
+        room,
+        initiated_by: "admin",
+        status: "pending"
+      });
+      if (inviteError) throw inviteError;
+
+      let emailSent = false;
+      if (selectedClient.email) {
+        const response = await fetch("/api/send-call-invite", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({
+            clientEmail: selectedClient.email,
+            clientName: selectedClient.full_name || "Client",
+            joinUrl
+          })
+        });
+        const result = await response.json().catch(()=>({}));
+        emailSent = response.ok && result.success;
+      }
+
+      window.open(joinUrl, "_blank", "noopener");
+
+      showMessage(
+        globalMessage,
+        emailSent
+          ? "Call started. The client was sent an email invitation."
+          : "Call started. The client can join from their portal. Email service is not configured yet.",
+        "success"
+      );
+    } catch (error) {
+      console.error(error);
+      showMessage(globalMessage, "Could not start the call: " + error.message, "error");
+    } finally {
+      videoCallBtn.disabled = false;
+      videoCallBtn.textContent = "📹 Start video call";
+    }
   });
 
   setInterval(async function () {
