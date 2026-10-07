@@ -6,60 +6,107 @@
   <title>TaxReady Books | Client Portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body{font-family:Arial,sans-serif;margin:0;background:#f6f7f9;color:#18212b}
-    .wrap{max-width:1000px;margin:auto;padding:28px 18px}
-    .brand{font-size:24px;font-weight:700;margin-bottom:24px}
-    .card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.06);margin-bottom:18px}
-    input,textarea{width:100%;box-sizing:border-box;padding:12px;margin:7px 0 14px;border:1px solid #ccd2d8;border-radius:9px;font:inherit}
-    button{border:0;border-radius:9px;padding:12px 18px;cursor:pointer;font-weight:700}
-    .primary{background:#18212b;color:white}.secondary{background:#e9edf1;color:#18212b}
-    .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .hidden{display:none}.muted{color:#66717c}.item{padding:15px 0;border-bottom:1px solid #e8ebee}.item:last-child{border-bottom:0}
-    .msg{padding:10px;border-radius:8px;background:#eef5ff;margin:10px 0}
 
-    a{color:#185abc}
-
-    /* Portal chooser */
+    :root{
+      --navy:#102a43;
+      --green:#1f5c4d;
+      --green-dark:#17483d;
+      --cream:#f7f8f6;
+      --surface:#ffffff;
+      --line:#e4e9e6;
+      --muted:#6b756f;
+      --shadow:0 10px 35px rgba(16,42,67,.07);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:linear-gradient(180deg,#f7f9f7 0%,#eef3f0 100%);
+      color:var(--navy);
+      min-height:100vh;
+    }
+    .wrap{max-width:1180px;margin:auto;padding:28px 22px 50px}
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      font-size:20px;font-weight:800;letter-spacing:-.3px;
+      margin-bottom:28px;color:var(--navy)
+    }
+    .brand:before{
+      content:"TB";display:grid;place-items:center;width:38px;height:38px;
+      border-radius:11px;background:var(--green);color:#fff;font-size:13px;font-weight:800;
+      box-shadow:0 6px 16px rgba(31,92,77,.22)
+    }
+    .card{
+      background:rgba(255,255,255,.96);
+      border:1px solid rgba(228,233,230,.95);
+      border-radius:var(--radius);
+      padding:26px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+    h1,h2,h3{letter-spacing:-.4px}
+    h1{font-size:28px;margin:0 0 8px}
+    h2{font-size:19px;margin:0 0 8px}
+    input,textarea{
+      width:100%;box-sizing:border-box;padding:13px 14px;margin:8px 0 15px;
+      border:1px solid #d8e0db;border-radius:11px;font:inherit;color:var(--navy);
+      background:#fbfcfb;outline:none;transition:.18s;
+    }
+    input:focus,textarea:focus{border-color:#7da99c;box-shadow:0 0 0 4px rgba(31,92,77,.09);background:#fff}
+    button{
+      border:0;border-radius:11px;padding:12px 17px;cursor:pointer;font-weight:750;
+      font:inherit;transition:transform .15s,box-shadow .15s,background .15s; 
+    }
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .primary{background:var(--green);color:white;box-shadow:0 5px 14px rgba(31,92,77,.16)}
+    .primary:hover{background:var(--green-dark)}
+    .secondary{background:#edf1ef;color:var(--navy)}
+    .row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .hidden{display:none!important}
+    .muted{color:var(--muted)}
+    .item{padding:17px 0;border-bottom:1px solid var(--line)}
+    .item:last-child{border-bottom:0}
+    .msg{padding:12px;border-radius:10px;background:#eef5ff;margin:10px 0}
+    a{color:var(--green)}
+    #portal>.card:first-of-type{
+      background:linear-gradient(135deg,#ffffff,#f3f8f5);
+      padding:30px;
+    }
+    #documents,#messages{margin-top:12px}
+    #messageForm{margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+    #clientFile{background:#fff}
+    #uploadClientFile{margin-top:0}
+    #callAlert{
+      border:1px solid #9bc8b9!important;background:#eef8f4!important;
+      box-shadow:0 10px 28px rgba(31,92,77,.10)
+    }
     .portal-overlay{
-      position:fixed;
-      inset:0;
-      z-index:1000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      background:rgba(24,33,43,.62);
-      backdrop-filter:blur(5px);
+      position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+      padding:20px;background:rgba(16,42,67,.58);backdrop-filter:blur(8px)
     }
     .portal-overlay.hidden{display:none}
     .portal-modal{
-      width:min(520px,100%);
-      background:#fff;
-      border-radius:20px;
-      padding:30px;
-      box-shadow:0 24px 70px rgba(0,0,0,.25);
+      width:min(520px,100%);background:#fff;border:1px solid #e2e8e4;border-radius:22px;
+      padding:32px;box-shadow:0 28px 80px rgba(16,42,67,.25)
     }
-    .portal-modal h2{margin:0 0 8px}
-    .portal-modal p{margin:0 0 22px;color:#66717c}
+    .portal-modal h2{margin:0 0 8px}.portal-modal p{margin:0 0 22px;color:var(--muted)}
     .portal-options{display:grid;gap:12px}
     .portal-option{
-      width:100%;
-      text-align:left;
-      padding:18px;
-      border:1px solid #dce1e6;
-      border-radius:14px;
-      background:#fff;
-      color:#18212b;
+      width:100%;text-align:left;padding:18px;border:1px solid #dce4df;border-radius:14px;
+      background:#fff;color:var(--navy)
     }
-    .portal-option:hover{background:#f6f7f9;border-color:#b9c1ca}
-    .portal-option strong{display:block;font-size:16px;margin-bottom:4px}
-    .portal-option span{display:block;font-size:13px;font-weight:400;color:#66717c}
-    .portal-close{
-      margin-top:14px;
-      width:100%;
-      background:#e9edf1;
-      color:#18212b;
+    .portal-option:hover{background:#f5f8f6;border-color:#a8beb5;box-shadow:0 5px 15px rgba(16,42,67,.06)}
+    .portal-option strong{display:block;font-size:16px;margin-bottom:5px}
+    .portal-option span{display:block;font-size:13px;font-weight:400;color:var(--muted)}
+    .portal-close{margin-top:14px;width:100%;background:#edf1ef;color:var(--navy)}
+    @media(max-width:700px){
+      .wrap{padding:20px 14px 35px}.card{padding:20px}
+      .brand{margin-bottom:20px}h1{font-size:24px}
+      #videoCallBtn,#signOut{width:100%}
     }
+
   </style>
 </head>
 <body>
