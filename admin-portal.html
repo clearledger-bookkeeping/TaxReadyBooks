@@ -8,96 +8,23 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-
-    :root{
-      --navy:#102a43;--green:#1f5c4d;--green-dark:#17483d;
-      --bg:#f5f8f6;--surface:#fff;--line:#e1e8e4;--muted:#6d7872;
-      --danger:#b42318;--shadow:0 10px 35px rgba(16,42,67,.07);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:linear-gradient(180deg,#f7f9f8,#eef3f0);color:var(--navy)
-    }
-    header{
-      background:linear-gradient(135deg,#102f29,#1f5c4d);color:#fff;padding:22px 30px;
-      box-shadow:0 8px 25px rgba(16,42,67,.12)
-    }
-    header .inner{max-width:1240px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
-    header h1{margin:0;font-size:22px;letter-spacing:-.3px}
-    header p{margin:5px 0 0;opacity:.78;font-size:13px}
-    .container{max-width:1240px;margin:30px auto;padding:0 20px}
-    .card{
-      background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:18px;
-      padding:25px;margin-bottom:20px;box-shadow:var(--shadow)
-    }
-    h2{margin:0 0 8px;color:var(--navy);letter-spacing:-.4px}
-    h3{color:var(--navy);margin:0 0 8px}
-    input,textarea,select{
-      width:100%;padding:13px 14px;border:1px solid #d7e0db;border-radius:11px;
-      font-size:15px;margin-top:7px;margin-bottom:15px;background:#fbfcfb;color:var(--navy);outline:none
-    }
-    input:focus,textarea:focus,select:focus{border-color:#7da99c;box-shadow:0 0 0 4px rgba(31,92,77,.09);background:#fff}
-    textarea{min-height:120px;resize:vertical}
-    button{
-      border:0;border-radius:11px;padding:12px 18px;cursor:pointer;font-size:14px;font-weight:750;
-      background:var(--green);color:#fff;transition:.15s;box-shadow:0 5px 14px rgba(31,92,77,.13)
-    }
-    button:hover{background:var(--green-dark);transform:translateY(-1px)}
-    button:disabled{opacity:.55;cursor:not-allowed;transform:none}
-    button.secondary{background:#edf1ef;color:var(--navy);box-shadow:none}
-    button.secondary:hover{background:#e2e9e5}
-    button.danger{background:#fff0ef;color:var(--danger);box-shadow:none}
-    button.small{padding:8px 12px;font-size:12px;border-radius:9px}
-    .hidden{display:none!important}
-    .message{padding:13px 15px;border-radius:11px;margin-bottom:15px;background:#eef3ff;border:1px solid #dbe4ff}
-    .error{background:#fff0ef;color:#9b2218;border-color:#ffd6d1}
-    .success{background:#edf8f2;color:#17633e;border-color:#cce8d8}
-    .muted{color:var(--muted);font-size:13px}
-    .login-card{max-width:480px;margin:65px auto}
-    .login-card h2{font-size:25px;margin-bottom:18px}
-    .top-actions{display:flex;gap:9px;flex-wrap:wrap}
-    .layout{display:grid;grid-template-columns:310px minmax(0,1fr);gap:20px;align-items:start}
-    .client-list{max-height:650px;overflow-y:auto;padding-right:3px}
-    .client{
-      border:1px solid var(--line);padding:15px;border-radius:13px;margin-bottom:9px;cursor:pointer;
-      background:#fff;transition:.15s
-    }
-    .client:hover{background:#f7faf8;border-color:#bfd0c8;transform:translateY(-1px)}
-    .client.selected{background:#eaf5f0;border-color:#6e9e8f;box-shadow:inset 3px 0 0 var(--green)}
-    .client strong{display:block;margin-bottom:5px}.client small{color:var(--muted);word-break:break-word}
-    .document,.chat-message{border:1px solid var(--line);padding:16px;border-radius:13px;margin-bottom:11px;background:#fff}
-    .document-header{display:flex;justify-content:space-between;align-items:center;gap:15px}
-    .document-name{font-weight:700;word-break:break-word}
-    .chat-message{background:#f8faf9}
-    .chat-message.admin{border-left:4px solid var(--green)}
-    .chat-message.client{border-left:4px solid #aeb9b3}
-    .chat-meta{font-size:12px;color:var(--muted);margin-bottom:7px}
-    .chat-body{white-space:pre-wrap;word-break:break-word}
-    .upload-area{
-      border:1.5px dashed #aebfb7;border-radius:14px;padding:22px;margin-bottom:20px;
-      background:#f8fbf9
-    }
-    .upload-area h3{margin-bottom:5px}
-    .selected-client{
-      background:linear-gradient(135deg,#eef7f3,#f7faf8);padding:18px;border-radius:14px;
-      border:1px solid #d6e6df;margin-bottom:0
-    }
-    #adminSection>.card:first-child{padding:28px}
-    @media(max-width:850px){
-      .layout{grid-template-columns:1fr}
-      header .inner{flex-direction:column;align-items:flex-start}
-      .client-list{max-height:350px}
-    }
-    @media(max-width:560px){
-      .container{padding:0 13px;margin:20px auto}
-      .card{padding:19px}
-      header{padding:18px 16px}
-      .document-header{align-items:flex-start;flex-direction:column}
-      #videoCallBtn{width:100%}
-    }
-
-  </style>
+:root{--navy:#102a43;--green:#1f5c4d;--green-dark:#17483d;--bg:#f4f7f5;--surface:#fff;--line:#e0e7e3;--muted:#718079;--danger:#b42318;--shadow:0 12px 34px rgba(16,42,67,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--navy)}
+header{background:linear-gradient(135deg,#102f29,#1f5c4d);color:#fff;padding:20px 28px;box-shadow:0 8px 25px rgba(16,42,67,.12)}header .inner{max-width:1260px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px}header h1{margin:0;font-size:21px}header p{margin:4px 0 0;opacity:.75;font-size:12px}.container{max-width:1260px;margin:25px auto;padding:0 18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}h2,h3{letter-spacing:-.35px}h2{margin:0 0 5px;font-size:19px}h3{margin:0 0 5px;font-size:15px}.muted{color:var(--muted);font-size:13px}.hidden{display:none!important}
+input,textarea,select{width:100%;padding:13px 14px;border:1px solid #d7e0db;border-radius:11px;font:inherit;background:#fbfcfb;color:var(--navy);outline:none;margin:7px 0 14px}input:focus,textarea:focus,select:focus{border-color:#78a394;box-shadow:0 0 0 4px rgba(31,92,77,.08);background:#fff}textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:11px;padding:11px 16px;cursor:pointer;font:inherit;font-size:14px;font-weight:750;transition:.15s}button:hover{transform:translateY(-1px)}button:disabled{opacity:.55;cursor:not-allowed;transform:none}button:not(.secondary):not(.danger){background:var(--green);color:#fff;box-shadow:0 6px 15px rgba(31,92,77,.16)}button:not(.secondary):not(.danger):hover{background:var(--green-dark)}button.secondary{background:#edf2ef;color:var(--navy);box-shadow:none}button.danger{background:#fff0ef;color:var(--danger);box-shadow:none}button.small{padding:8px 12px;font-size:12px}
+.message{padding:13px 15px;border-radius:11px;margin-bottom:14px;background:#eef3ff;border:1px solid #dbe4ff}.error{background:#fff0ef;color:#9b2218;border-color:#ffd6d1}.success{background:#edf8f2;color:#17633e;border-color:#cce8d8}.login-card{max-width:460px;margin:60px auto}
+.dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,#fff,#f1f7f4)}.eyebrow{font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:18px;align-items:start}.client-panel{position:sticky;top:18px}.client-list{max-height:690px;overflow:auto;padding-right:3px}.client{border:1px solid var(--line);padding:14px;border-radius:13px;margin-bottom:9px;cursor:pointer;background:#fff;transition:.15s}.client:hover{background:#f7faf8;border-color:#bfd0c8}.client.selected{background:#eaf5f0;border-color:#6e9e8f;box-shadow:inset 3px 0 0 var(--green)}.client strong{display:block;margin-bottom:5px}.client small{color:var(--muted);word-break:break-word}
+.selected-client{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.selected-client-box{padding:18px;border:1px solid #d6e6df;border-radius:15px;background:linear-gradient(135deg,#eef7f3,#f8fbf9)}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.title-wrap{display:flex;align-items:center;gap:11px}.section-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#eef5f1;font-size:18px}
+.chat-window{height:430px;overflow:auto;background:#f7faf8;border:1px solid var(--line);border-radius:15px;padding:15px}.chat-message{display:flex;margin:9px 0}.chat-message.client{justify-content:flex-start}.chat-message.admin{justify-content:flex-end}.chat-bubble{max-width:78%;padding:10px 13px;border-radius:15px;background:#fff;border:1px solid var(--line)}.chat-message.admin .chat-bubble{background:var(--green);color:#fff;border-color:var(--green)}.chat-meta{font-size:10px;opacity:.65;margin-bottom:4px}.chat-body{white-space:pre-wrap;word-break:break-word}
+#adminMessage{min-height:54px;resize:none}#sendMessageBtn{min-width:100px}.composer{display:flex;gap:10px;align-items:flex-end;margin-top:14px}.composer textarea{margin:0}.composer button{height:54px}
+.upload-area{border:1.5px dashed #aebfb7;border-radius:15px;padding:20px;background:#f8fbf9;margin-bottom:15px}.upload-area input{background:#fff}.document-list{max-height:440px;overflow:auto}.document{border:1px solid var(--line);padding:15px;border-radius:13px;margin-bottom:10px;background:#fff}.document-header{display:flex;justify-content:space-between;align-items:center;gap:14px}.document-name{font-weight:700;word-break:break-word}.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+#noClientSelected{text-align:center;padding:50px 25px}.quick-note{padding:13px 15px;border-radius:12px;background:#f7faf8;border:1px solid var(--line);margin-top:12px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.client-panel{position:static}.client-list{max-height:330px}}@media(max-width:600px){header{padding:17px 14px}.container{padding:0 12px;margin:18px auto}.card{padding:18px}.dashboard-head{align-items:flex-start}.selected-client{align-items:stretch;flex-direction:column}.selected-client button{width:100%}.composer{align-items:stretch;flex-direction:column}.composer button{width:100%}.chat-window{height:360px}.document-header{align-items:flex-start;flex-direction:column}.top-actions{width:100%}.top-actions button{flex:1}}
+</style>
 </head>
 
 <body>
@@ -154,148 +81,67 @@
 
 <!-- ADMIN DASHBOARD -->
 <div id="adminSection" class="container hidden">
-
   <div id="globalMessage" class="hidden"></div>
 
-  <div class="card">
-
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
-
-      <div>
-        <h2>Admin Dashboard</h2>
-        <p class="muted">
-          Manage clients, documents, and messages.
-        </p>
-      </div>
-
-      <div>
-        <strong id="adminEmail"></strong>
-      </div>
-
-    </div>
-
+  <div class="card dashboard-head">
+    <div><div class="eyebrow">TaxReady Books</div><h2>Admin Dashboard</h2><p class="muted">Select a client, then manage their conversation and documents from one workspace.</p></div>
+    <strong id="adminEmail"></strong>
   </div>
-
 
   <div class="layout">
-
-    <!-- CLIENT LIST -->
-    <div class="card">
-
+    <aside class="card client-panel">
       <h3>Clients</h3>
+      <p class="muted">Choose a client to open their private workspace.</p>
+      <div id="clientList" class="client-list">Loading clients...</div>
+    </aside>
 
-      <p class="muted">
-        Select a client to manage their documents and messages.
-      </p>
-
-      <div id="clientList" class="client-list">
-        Loading clients...
-      </div>
-
-    </div>
-
-
-    <!-- CLIENT MANAGEMENT -->
-    <div>
-
+    <main>
       <div id="noClientSelected" class="card">
-
-        <h2>Select a Client</h2>
-
-        <p class="muted">
-          Choose a client from the list on the left.
-        </p>
-
+        <div class="section-icon" style="margin:0 auto 14px">👤</div>
+        <h2>Select a client</h2>
+        <p class="muted">Choose a client from the list to open Messenger and Documents.</p>
       </div>
-
 
       <div id="clientManagement" class="hidden">
-
-        <div class="card">
-
+        <div class="card selected-client-box">
           <div class="selected-client">
-
-            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-              <div>
-                <h3 id="selectedClientName">Client</h3>
-                <div id="selectedClientEmail" class="muted"></div>
-              </div>
-              <button id="videoCallBtn">📹 Start video call</button>
-            </div>
-
+            <div><div class="eyebrow">Active client</div><h2 id="selectedClientName">Client</h2><div id="selectedClientEmail" class="muted"></div></div>
+            <button id="videoCallBtn">📹 Call client</button>
           </div>
-
         </div>
 
-
-        <!-- DOCUMENTS -->
-        <div class="card">
-
-          <h2>Client Documents</h2>
-
-          <div id="documentMessage" class="hidden"></div>
-
-          <div class="upload-area">
-
-            <h3>Upload Document</h3>
-
-            <p class="muted">
-              Upload any file type for this client — PDF, Word, Excel, images, ZIP, receipts, bank statements, or other bookkeeping files.
-            </p>
-
-            <input
-              type="file"
-              id="documentFile"
-              accept="*/*"
-            >
-
-            <button id="uploadDocumentBtn">
-              Upload Document
-            </button>
-
+        <section class="card">
+          <div class="section-head">
+            <div class="title-wrap"><div class="section-icon">💬</div><div><h2>Messenger</h2><div class="muted">Private conversation with this client</div></div></div>
+            <button class="secondary" id="videoCallBtnMirror" type="button">📹 Call</button>
           </div>
-
-          <div id="documentsList">
-            Loading documents...
+          <div id="messagesList" class="chat-window">Loading messages...</div>
+          <div class="composer">
+            <textarea id="adminMessage" placeholder="Write a message to this client..."></textarea>
+            <button id="sendMessageBtn">Send</button>
           </div>
-
-        </div>
-
-
-        <!-- MESSAGES -->
-        <div class="card">
-
-          <h2>Messages</h2>
-
-          <div id="messagesList">
-            Loading messages...
-          </div>
-
-          <hr style="border:0;border-top:1px solid #e5e7eb;margin:25px 0;">
-
-          <h3>Send Message</h3>
-
           <div id="messageStatus" class="hidden"></div>
+        </section>
 
-          <textarea
-            id="adminMessage"
-            placeholder="Write a message to this client..."
-          ></textarea>
+        <section class="card">
+          <div class="section-head">
+            <div class="title-wrap"><div class="section-icon">📁</div><div><h2>Documents</h2><div class="muted">Send files securely to this client</div></div></div>
+          </div>
+          <div class="upload-area">
+            <h3>Send a document</h3>
+            <p class="muted">Upload any file type: PDF, Word, Excel, images, ZIP, receipts, bank statements, and more.</p>
+            <input type="file" id="documentFile" accept="*/*">
+            <button id="uploadDocumentBtn">Upload document</button>
+            <div id="documentMessage" class="hidden"></div>
+          </div>
+          <div id="documentsList" class="document-list">Loading documents...</div>
+        </section>
 
-          <button id="sendMessageBtn">
-            Send Message
-          </button>
-
-        </div>
-
+        <div class="quick-note">📹 <strong>Calling:</strong> the call button only calls the currently selected client. Their private Jitsi room is used for the call.</div>
       </div>
-
-    </div>
-
+    </main>
   </div>
-
 </div>
-
 
 <script>
 
@@ -1532,5 +1378,13 @@
 
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  const mirror=document.getElementById("videoCallBtnMirror");
+  const real=document.getElementById("videoCallBtn");
+  if(mirror&&real) mirror.addEventListener("click",()=>real.click());
+});
+</script>
 </body>
 </html>
