@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxReady Books — Admin Portal</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    header {
+      background: #173f35;
+      color: white;
+      padding: 20px 30px;
+    }
+
+    header .inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      opacity: 0.85;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #173f35;
+    }
+
+    h3 {
+      color: #173f35;
+      margin-top: 0;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-top: 7px;
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      background: #173f35;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button.secondary {
+      background: #6b7280;
+    }
+
+    button.danger {
+      background: #b91c1c;
+    }
+
+    button.small {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .message {
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #eef2ff;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .muted {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .login-card {
+      max-width: 500px;
+      margin: 60px auto;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 25px;
+    }
+
+    .client-list {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .client {
+      border: 1px solid #e5e7eb;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .client:hover {
+      background: #f9fafb;
+    }
+
+    .client.selected {
+      background: #e8f3ef;
+      border-color: #173f35;
+    }
+
+    .client strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .client small {
+      color: #6b7280;
+      word-break: break-word;
+    }
+
+    .document,
+    .chat-message {
+      border: 1px solid #e5e7eb;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .document-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .document-name {
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .chat-message {
+      background: #f9fafb;
+    }
+
+    .chat-message.admin {
+      border-left: 4px solid #173f35;
+    }
+
+    .chat-message.client {
+      border-left: 4px solid #9ca3af;
+    }
+
+    .chat-meta {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 7px;
+    }
+
+    .chat-body {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .upload-area {
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .selected-client {
+      background: #e8f3ef;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      header .inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="inner">
+    <div>
+      <h1>TaxReady Books</h1>
+      <p>Admin Portal</p>
+    </div>
+
+    <div id="headerActions" class="hidden">
+      <button id="signOutBtn" class="secondary">Sign out</button>
+    </div>
+  </div>
+</header>
+
+
+<!-- LOGIN -->
+<div id="loginSection" class="container">
+
+  <div class="card login-card">
+
+    <h2>Admin Sign In</h2>
+
+    <div id="loginMessage" class="hidden"></div>
+
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      placeholder="Admin email"
+      autocomplete="email"
+    >
+
+    <label for="password">Password</label>
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
+
+    <button id="loginBtn">Sign in</button>
+
+    <p class="muted">
+      Only accounts with the <strong>admin</strong> role can access this page.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ADMIN DASHBOARD -->
+<div id="adminSection" class="container hidden">
+
+  <div id="globalMessage" class="hidden"></div>
+
+  <div class="card">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+
+      <div>
+        <h2>Admin Dashboard</h2>
+        <p class="muted">
+          Manage clients, documents, and messages.
+        </p>
+      </div>
+
+      <div>
+        <strong id="adminEmail"></strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="layout">
+
+    <!-- CLIENT LIST -->
+    <div class="card">
+
+      <h3>Clients</h3>
+
+      <p class="muted">
+        Select a client to manage their documents and messages.
+      </p>
+
+      <div id="clientList" class="client-list">
+        Loading clients...
+      </div>
+
+    </div>
+
+
+    <!-- CLIENT MANAGEMENT -->
+    <div>
+
+      <div id="noClientSelected" class="card">
+
+        <h2>Select a Client</h2>
+
+        <p class="muted">
+          Choose a client from the list on the left.
+        </p>
+
+      </div>
+
+
+      <div id="clientManagement" class="hidden">
+
+        <div class="card">
+
+          <div class="selected-client">
+
+            <h3 id="selectedClientName">Client</h3>
+
+            <div id="selectedClientEmail" class="muted"></div>
+
+          </div>
+
+        </div>
+
+
+        <!-- DOCUMENTS -->
+        <div class="card">
+
+          <h2>Client Documents</h2>
+
+          <div id="documentMessage" class="hidden"></div>
+
+          <div class="upload-area">
+
+            <h3>Upload Document</h3>
+
+            <p class="muted">
+              Upload a document for this client.
+            </p>
+
+            <input
+              type="file"
+              id="documentFile"
+            >
+
+            <button id="uploadDocumentBtn">
+              Upload Document
+            </button>
+
+          </div>
+
+          <div id="documentsList">
+            Loading documents...
+          </div>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+        <div class="card">
+
+          <h2>Messages</h2>
+
+          <div id="messagesList">
+            Loading messages...
+          </div>
+
+          <hr style="border:0;border-top:1px solid #e5e7eb;margin:25px 0;">
+
+          <h3>Send Message</h3>
+
+          <div id="messageStatus" class="hidden"></div>
+
+          <textarea
+            id="adminMessage"
+            placeholder="Write a message to this client..."
+          ></textarea>
+
+          <button id="sendMessageBtn">
+            Send Message
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /* =========================================================
+     SUPABASE CONNECTION
+     ========================================================= */
+
+  const SUPABASE_URL =
+    "https://dusqlktenzrlvczazlwb.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_8_tfTYD-vnF1z-HukFr6_g_5gv2ICMQ";
+
+  const sb = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  /* =========================================================
+     ELEMENTS
+     ========================================================= */
+
+  const loginSection =
+    document.getElementById("loginSection");
+
+  const adminSection =
+    document.getElementById("adminSection");
+
+  const headerActions =
+    document.getElementById("headerActions");
+
+  const loginMessage =
+    document.getElementById("loginMessage");
+
+  const globalMessage =
+    document.getElementById("globalMessage");
+
+  const adminEmail =
+    document.getElementById("adminEmail");
+
+  const emailInput =
+    document.getElementById("email");
+
+  const passwordInput =
+    document.getElementById("password");
+
+  const loginBtn =
+    document.getElementById("loginBtn");
+
+  const signOutBtn =
+    document.getElementById("signOutBtn");
+
+  const clientList =
+    document.getElementById("clientList");
+
+  const noClientSelected =
+    document.getElementById("noClientSelected");
+
+  const clientManagement =
+    document.getElementById("clientManagement");
+
+  const selectedClientName =
+    document.getElementById("selectedClientName");
+
+  const selectedClientEmail =
+    document.getElementById("selectedClientEmail");
+
+  const documentFile =
+    document.getElementById("documentFile");
+
+  const uploadDocumentBtn =
+    document.getElementById("uploadDocumentBtn");
+
+  const documentsList =
+    document.getElementById("documentsList");
+
+  const documentMessage =
+    document.getElementById("documentMessage");
+
+  const messagesList =
+    document.getElementById("messagesList");
+
+  const adminMessage =
+    document.getElementById("adminMessage");
+
+  const sendMessageBtn =
+    document.getElementById("sendMessageBtn");
+
+  const messageStatus =
+    document.getElementById("messageStatus");
+
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+
+  let selectedClient = null;
+
+
+  /* =========================================================
+     HELPER FUNCTIONS
+     ========================================================= */
+
+  function showMessage(element, text, type = "") {
+
+    element.textContent = text;
+
+    element.className = "message";
+
+    if (type) {
+      element.classList.add(type);
+    }
+
+    element.classList.remove("hidden");
+  }
+
+
+  function hideMessage(element) {
+
+    element.classList.add("hidden");
+
+  }
+
+
+  function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  function formatDate(dateString) {
+
+    if (!dateString) {
+      return "";
+    }
+
+    const date = new Date(dateString);
+
+    return date.toLocaleString();
+
+  }
+
+
+  /* =========================================================
+     CHECK ADMIN
+     ========================================================= */
+
+  async function checkAdmin() {
+
+    const {
+      data: {
+        user
+      },
+      error: userError
+    } = await sb.auth.getUser();
+
+
+    if (userError || !user) {
+
+      showLogin();
+
+      return false;
+
+    }
+
+
+    const {
+      data: profile,
+      error: profileError
+    } = await sb
+      .from("profiles")
+      .select("id, email, full_name, role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+
+    if (profileError) {
+
+      console.error(profileError);
+
+      showMessage(
+        loginMessage,
+        "Could not check your admin account.",
+        "error"
+      );
+
+      showLogin();
+
+      return false;
+
+    }
+
+
+    if (!profile || profile.role !== "admin") {
+
+      await sb.auth.signOut();
+
+      showMessage(
+        loginMessage,
+        "Access denied. This account is not an admin.",
+        "error"
+      );
+
+      showLogin();
+
+      return false;
+
+    }
+
+
+    adminEmail.textContent =
+      profile.email || user.email || "";
+
+    showAdmin();
+
+    await loadClients();
+
+    return true;
+
+  }
+
+
+  /* =========================================================
+     SHOW / HIDE SECTIONS
+     ========================================================= */
+
+  function showLogin() {
+
+    loginSection.classList.remove("hidden");
+
+    adminSection.classList.add("hidden");
+
+    headerActions.classList.add("hidden");
+
+  }
+
+
+  function showAdmin() {
+
+    loginSection.classList.add("hidden");
+
+    adminSection.classList.remove("hidden");
+
+    headerActions.classList.remove("hidden");
+
+  }
+
+
+  /* =========================================================
+     LOGIN
+     ========================================================= */
+
+  loginBtn.addEventListener("click", async function () {
+
+    hideMessage(loginMessage);
+
+    const email =
+      emailInput.value.trim();
+
+    const password =
+      passwordInput.value;
+
+
+    if (!email || !password) {
+
+      showMessage(
+        loginMessage,
+        "Please enter your email and password.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    loginBtn.disabled = true;
+
+    loginBtn.textContent = "Signing in...";
+
+
+    const {
+      error
+    } = await sb.auth.signInWithPassword({
+      email,
+      password
+    });
+
+
+    loginBtn.disabled = false;
+
+    loginBtn.textContent = "Sign in";
+
+
+    if (error) {
+
+      showMessage(
+        loginMessage,
+        error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    await checkAdmin();
+
+  });
+
+
+  /* =========================================================
+     ENTER KEY LOGIN
+     ========================================================= */
+
+  passwordInput.addEventListener("keydown", function (event) {
+
+    if (event.key === "Enter") {
+
+      loginBtn.click();
+
+    }
+
+  });
+
+
+  /* =========================================================
+     SIGN OUT
+     ========================================================= */
+
+  signOutBtn.addEventListener("click", async function () {
+
+    await sb.auth.signOut();
+
+    selectedClient = null;
+
+    showLogin();
+
+    emailInput.value = "";
+
+    passwordInput.value = "";
+
+    showMessage(
+      loginMessage,
+      "You have been signed out.",
+      "success"
+    );
+
+  });
+
+
+  /* =========================================================
+     LOAD CLIENTS
+     ========================================================= */
+
+  async function loadClients() {
+
+    clientList.textContent =
+      "Loading clients...";
+
+
+    const {
+      data: clients,
+      error
+    } = await sb
+      .from("profiles")
+      .select("id, email, full_name, role")
+      .eq("role", "client")
+      .order("created_at", {
+        ascending: false
+      });
+
+
+    if (error) {
+
+      console.error(error);
+
+      clientList.innerHTML =
+        '<div class="message error">' +
+        escapeHtml(error.message) +
+        '</div>';
+
+      return;
+
+    }
+
+
+    if (!clients || clients.length === 0) {
+
+      clientList.innerHTML =
+        '<p class="muted">No clients found.</p>';
+
+      return;
+
+    }
+
+
+    clientList.innerHTML = "";
+
+
+    clients.forEach(function (client) {
+
+      const div =
+        document.createElement("div");
+
+      div.className = "client";
+
+      div.dataset.id = client.id;
+
+
+      const name =
+        client.full_name ||
+        "Unnamed client";
+
+
+      const email =
+        client.email ||
+        "No email";
+
+
+      div.innerHTML = `
+        <strong>${escapeHtml(name)}</strong>
+        <small>${escapeHtml(email)}</small>
+      `;
+
+
+      div.addEventListener("click", function () {
+
+        selectClient(client);
+
+      });
+
+
+      clientList.appendChild(div);
+
+    });
+
+  }
+
+
+  /* =========================================================
+     SELECT CLIENT
+     ========================================================= */
+
+  async function selectClient(client) {
+
+    selectedClient = client;
+
+
+    document
+      .querySelectorAll(".client")
+      .forEach(function (item) {
+
+        item.classList.remove("selected");
+
+      });
+
+
+    const selectedElement =
+      document.querySelector(
+        '.client[data-id="' +
+        CSS.escape(client.id) +
+        '"]'
+      );
+
+
+    if (selectedElement) {
+
+      selectedElement.classList.add("selected");
+
+    }
+
+
+    noClientSelected.classList.add("hidden");
+
+    clientManagement.classList.remove("hidden");
+
+
+    selectedClientName.textContent =
+      client.full_name ||
+      "Unnamed client";
+
+
+    selectedClientEmail.textContent =
+      client.email ||
+      "";
+
+
+    await loadDocuments();
+
+    await loadMessages();
+
+  }
+
+
+  /* =========================================================
+     LOAD DOCUMENTS
+     ========================================================= */
+
+  async function loadDocuments() {
+
+    if (!selectedClient) {
+      return;
+    }
+
+
+    documentsList.textContent =
+      "Loading documents...";
+
+
+    const {
+      data: documents,
+      error
+    } = await sb
+      .from("documents")
+      .select("*")
+      .eq("user_id", selectedClient.id)
+      .order("created_at", {
+        ascending: false
+      });
+
+
+    if (error) {
+
+      console.error(error);
+
+      documentsList.innerHTML =
+        '<div class="message error">' +
+        escapeHtml(error.message) +
+        '</div>';
+
+      return;
+
+    }
+
+
+    if (!documents || documents.length === 0) {
+
+      documentsList.innerHTML =
+        '<p class="muted">No documents have been uploaded for this client.</p>';
+
+      return;
+
+    }
+
+
+    documentsList.innerHTML = "";
+
+
+    documents.forEach(function (doc) {
+
+      const wrapper =
+        document.createElement("div");
+
+      wrapper.className = "document";
+
+
+      wrapper.innerHTML = `
+        <div class="document-header">
+
+          <div>
+            <div class="document-name">
+              ${escapeHtml(doc.file_name || "Document")}
+            </div>
+
+            <div class="muted">
+              ${escapeHtml(formatDate(doc.created_at))}
+            </div>
+          </div>
+
+          <div class="top-actions">
+
+            <button
+              class="small open-document"
+              data-path="${escapeHtml(doc.storage_path)}"
+            >
+              Open
+            </button>
+
+            <button
+              class="small danger delete-document"
+              data-id="${escapeHtml(doc.id)}"
+              data-path="${escapeHtml(doc.storage_path)}"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+
+      wrapper
+        .querySelector(".open-document")
+        .addEventListener("click", function () {
+
+          openDocument(doc.storage_path);
+
+        });
+
+
+      wrapper
+        .querySelector(".delete-document")
+        .addEventListener("click", function () {
+
+          deleteDocument(
+            doc.id,
+            doc.storage_path
+          );
+
+        });
+
+
+      documentsList.appendChild(wrapper);
+
+    });
+
+  }
+
+
+  /* =========================================================
+     OPEN DOCUMENT
+     ========================================================= */
+
+  async function openDocument(path) {
+
+    hideMessage(documentMessage);
+
+
+    const {
+      data,
+      error
+    } = await sb.storage
+      .from("client-documents")
+      .createSignedUrl(
+        path,
+        60 * 10
+      );
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        documentMessage,
+        "Could not open document: " + error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (data && data.signedUrl) {
+
+      window.open(
+        data.signedUrl,
+        "_blank"
+      );
+
+    }
+
+  }
+
+
+  /* =========================================================
+     DELETE DOCUMENT
+     ========================================================= */
+
+  async function deleteDocument(
+    documentId,
+    storagePath
+  ) {
+
+    if (!selectedClient) {
+      return;
+    }
+
+
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to delete this document?"
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    hideMessage(documentMessage);
+
+
+    const {
+      error: storageError
+    } = await sb.storage
+      .from("client-documents")
+      .remove([
+        storagePath
+      ]);
+
+
+    if (storageError) {
+
+      console.error(storageError);
+
+      showMessage(
+        documentMessage,
+        "Could not delete the file: " +
+        storageError.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const {
+      error: databaseError
+    } = await sb
+      .from("documents")
+      .delete()
+      .eq("id", documentId);
+
+
+    if (databaseError) {
+
+      console.error(databaseError);
+
+      showMessage(
+        documentMessage,
+        "File deleted, but database record could not be deleted: " +
+        databaseError.message,
+        "error"
+      );
+
+      await loadDocuments();
+
+      return;
+
+    }
+
+
+    showMessage(
+      documentMessage,
+      "Document deleted.",
+      "success"
+    );
+
+
+    await loadDocuments();
+
+  }
+
+
+  /* =========================================================
+     UPLOAD DOCUMENT
+     ========================================================= */
+
+  uploadDocumentBtn.addEventListener(
+    "click",
+    async function () {
+
+      if (!selectedClient) {
+
+        showMessage(
+          documentMessage,
+          "Please select a client first.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const file =
+        documentFile.files[0];
+
+
+      if (!file) {
+
+        showMessage(
+          documentMessage,
+          "Please choose a file first.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      hideMessage(documentMessage);
+
+
+      uploadDocumentBtn.disabled = true;
+
+      uploadDocumentBtn.textContent =
+        "Uploading...";
+
+
+      try {
+
+        const safeName =
+          file.name
+            .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+
+        const filePath =
+          selectedClient.id +
+          "/" +
+          Date.now() +
+          "-" +
+          safeName;
+
+
+        const {
+          data: uploadData,
+          error: uploadError
+        } = await sb.storage
+          .from("client-documents")
+          .upload(
+            filePath,
+            file,
+            {
+              cacheControl: "3600",
+              upsert: false
+            }
+          );
+
+
+        if (uploadError) {
+
+          throw uploadError;
+
+        }
+
+
+        const {
+          error: databaseError
+        } = await sb
+          .from("documents")
+          .insert({
+
+            user_id:
+              selectedClient.id,
+
+            file_name:
+              file.name,
+
+            storage_path:
+              uploadData.path
+
+          });
+
+
+        if (databaseError) {
+
+          await sb.storage
+            .from("client-documents")
+            .remove([
+              uploadData.path
+            ]);
+
+          throw databaseError;
+
+        }
+
+
+        documentFile.value = "";
+
+
+        showMessage(
+          documentMessage,
+          "Document uploaded successfully.",
+          "success"
+        );
+
+
+        await loadDocuments();
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          documentMessage,
+          "Upload failed: " +
+          error.message,
+          "error"
+        );
+
+      }
+
+      finally {
+
+        uploadDocumentBtn.disabled = false;
+
+        uploadDocumentBtn.textContent =
+          "Upload Document";
+
+      }
+
+    }
+  );
+
+
+  /* =========================================================
+     LOAD MESSAGES
+     ========================================================= */
+
+  async function loadMessages() {
+
+    if (!selectedClient) {
+      return;
+    }
+
+
+    messagesList.textContent =
+      "Loading messages...";
+
+
+    const {
+      data: messages,
+      error
+    } = await sb
+      .from("messages")
+      .select("*")
+      .eq("user_id", selectedClient.id)
+      .order("created_at", {
+        ascending: true
+      });
+
+
+    if (error) {
+
+      console.error(error);
+
+      messagesList.innerHTML =
+        '<div class="message error">' +
+        escapeHtml(error.message) +
+        '</div>';
+
+      return;
+
+    }
+
+
+    if (!messages || messages.length === 0) {
+
+      messagesList.innerHTML =
+        '<p class="muted">No messages yet.</p>';
+
+      return;
+
+    }
+
+
+    messagesList.innerHTML = "";
+
+
+    messages.forEach(function (message) {
+
+      const div =
+        document.createElement("div");
+
+
+      div.className =
+        "chat-message " +
+        (
+          message.sender_role === "admin"
+            ? "admin"
+            : "client"
+        );
+
+
+      const sender =
+        message.sender_role === "admin"
+          ? "TaxReady Books"
+          : "Client";
+
+
+      div.innerHTML = `
+        <div class="chat-meta">
+          <strong>${escapeHtml(sender)}</strong>
+          ·
+          ${escapeHtml(formatDate(message.created_at))}
+        </div>
+
+        <div class="chat-body">
+          ${escapeHtml(message.body || "")}
+        </div>
+      `;
+
+
+      messagesList.appendChild(div);
+
+    });
+
+
+    messagesList.scrollTop =
+      messagesList.scrollHeight;
+
+  }
+
+
+  /* =========================================================
+     SEND MESSAGE
+     ========================================================= */
+
+  sendMessageBtn.addEventListener(
+    "click",
+    async function () {
+
+      if (!selectedClient) {
+
+        showMessage(
+          messageStatus,
+          "Please select a client first.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const body =
+        adminMessage.value.trim();
+
+
+      if (!body) {
+
+        showMessage(
+          messageStatus,
+          "Please type a message.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      hideMessage(messageStatus);
+
+
+      sendMessageBtn.disabled = true;
+
+      sendMessageBtn.textContent =
+        "Sending...";
+
+
+      const {
+        error
+      } = await sb
+        .from("messages")
+        .insert({
+
+          user_id:
+            selectedClient.id,
+
+          sender_role:
+            "admin",
+
+          body:
+            body
+
+        });
+
+
+      sendMessageBtn.disabled = false;
+
+      sendMessageBtn.textContent =
+        "Send Message";
+
+
+      if (error) {
+
+        console.error(error);
+
+        showMessage(
+          messageStatus,
+          "Could not send message: " +
+          error.message,
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      adminMessage.value = "";
+
+
+      showMessage(
+        messageStatus,
+        "Message sent successfully.",
+        "success"
+      );
+
+
+      await loadMessages();
+
+  });
+
+
+  /* =========================================================
+     AUTH STATE CHANGES
+     ========================================================= */
+
+  sb.auth.onAuthStateChange(
+    async function (event, session) {
+
+      if (session) {
+
+        await checkAdmin();
+
+      } else {
+
+        showLogin();
+
+      }
+
+    }
+  );
+
+
+  /* =========================================================
+     INITIAL SESSION CHECK
+     ========================================================= */
+
+  (async function () {
+
+    const {
+      data: {
+        session
+      }
+    } = await sb.auth.getSession();
+
+
+    if (session) {
+
+      await checkAdmin();
+
+    } else {
+
+      showLogin();
+
+    }
+
+  })();
+
+</script>
+
+</body>
+</html>
