@@ -26,22 +26,34 @@
   <section id="authCard" class="card">
     <h1>Client sign in</h1>
     <p class="muted">Use the email and password provided for your client account.</p>
-    <label>Email<input id="email" type="email" autocomplete="email"></label>
-    <label>Password<input id="password" type="password" autocomplete="current-password"></label>
+
+    <label>
+      Email
+      <input id="email" type="email" autocomplete="email">
+    </label>
+
+    <label>
+      Password
+      <input id="password" type="password" autocomplete="current-password">
+    </label>
+
     <div class="row">
       <button class="primary" id="signIn">Sign in</button>
       <button class="secondary" id="signUp">Create account</button>
     </div>
+
     <p id="authMessage" class="muted"></p>
   </section>
 
   <section id="portal" class="hidden">
+
     <div class="card">
       <div class="row">
         <div>
           <h1>Welcome</h1>
           <p id="userEmail" class="muted"></p>
         </div>
+
         <button class="secondary" id="signOut">Sign out</button>
       </div>
     </div>
@@ -53,20 +65,36 @@
 
     <div class="card">
       <h2>Messages</h2>
+
       <div id="messages">Loading…</div>
+
       <form id="messageForm">
-        <textarea id="messageText" rows="4" maxlength="2000" placeholder="Write a message to TaxReady Books…"></textarea>
+        <textarea
+          id="messageText"
+          rows="4"
+          maxlength="2000"
+          placeholder="Write a message to TaxReady Books…"
+        ></textarea>
+
         <button class="primary" type="submit">Send message</button>
       </form>
+
       <p id="messageStatus" class="muted"></p>
     </div>
 
     <div class="card">
       <h2>My profile</h2>
-      <label>Full name<input id="fullName"></label>
+
+      <label>
+        Full name
+        <input id="fullName">
+      </label>
+
       <button class="primary" id="saveProfile">Save profile</button>
+
       <p id="profileStatus" class="muted"></p>
     </div>
+
   </section>
 </div>
 
@@ -74,7 +102,11 @@
   const SUPABASE_URL = "https://dusqlktenzrlvczazlwb.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_8_tfTYD-vnF1z-HukFr6_g_5gv2ICMQ";
 
-  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const sb = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
   const $ = id => document.getElementById(id);
 
   function showAuth(message="") {
@@ -91,89 +123,208 @@
 
   $("signIn").onclick = async () => {
     $("authMessage").textContent = "Signing in…";
+
     const {data,error} = await sb.auth.signInWithPassword({
-      email:$("email").value.trim(), password:$("password").value
+      email:$("email").value.trim(),
+      password:$("password").value
     });
-    if(error){ $("authMessage").textContent = error.message; return; }
-    showPortal(data.user); await loadPortal();
+
+    if(error){
+      $("authMessage").textContent = error.message;
+      return;
+    }
+
+    showPortal(data.user);
+    await loadPortal();
   };
 
   $("signUp").onclick = async () => {
     $("authMessage").textContent = "Creating account…";
+
     const {error} = await sb.auth.signUp({
-      email:$("email").value.trim(), password:$("password").value
+      email:$("email").value.trim(),
+      password:$("password").value
     });
+
     $("authMessage").textContent = error
       ? error.message
       : "Account created. Check your email if email confirmation is enabled, then sign in.";
   };
 
-  $("signOut").onclick = async () => { await sb.auth.signOut(); showAuth("You are signed out."); };
+  $("signOut").onclick = async () => {
+    await sb.auth.signOut();
+    showAuth("You are signed out.");
+  };
 
   async function loadPortal(){
-    const {data:{user}} = await sb.auth.getUser();
-    if(!user) return showAuth();
 
-    const {data:profile} = await sb.from("profiles").select("full_name").eq("id",user.id).maybeSingle();
+    const {data:{user}} = await sb.auth.getUser();
+
+    if(!user){
+      return showAuth();
+    }
+
+    const {data:profile} = await sb
+      .from("profiles")
+      .select("full_name")
+      .eq("id",user.id)
+      .maybeSingle();
+
     $("fullName").value = profile?.full_name || "";
 
-    const {data:docs,error:docError} = await sb.from("documents")
+    const {data:docs,error:docError} = await sb
+      .from("documents")
       .select("id,title,description,storage_path,created_at")
-      .eq("client_id",user.id).order("created_at",{ascending:false});
+      .eq("client_id",user.id)
+      .order("created_at",{ascending:false});
 
     $("documents").innerHTML = docError
       ? "<p>Documents could not be loaded.</p>"
-      : (docs?.length ? docs.map(d=>`
-        <div class="item">
-          <strong>${escapeHtml(d.title)}</strong>
-          <p class="muted">${escapeHtml(d.description || "")}</p>
-          <button class="secondary" onclick="openDocument('${d.id}','${encodeURIComponent(d.storage_path)}')">Open document</button>
-        </div>`).join("") : "<p class='muted'>No documents have been added yet.</p>");
+      : (
+          docs?.length
+          ? docs.map(d=>`
+              <div class="item">
+                <strong>${escapeHtml(d.title)}</strong>
 
-    const {data:messages,error:msgError} = await sb.from("messages")
-      .select("body,sender_role,created_at").eq("client_id",user.id)
+                <p class="muted">
+                  ${escapeHtml(d.description || "")}
+                </p>
+
+                <button
+                  class="secondary"
+                  onclick="openDocument('${d.id}','${encodeURIComponent(d.storage_path)}')"
+                >
+                  Open document
+                </button>
+              </div>
+            `).join("")
+          : "<p class='muted'>No documents have been added yet.</p>"
+        );
+
+    const {data:messages,error:msgError} = await sb
+      .from("messages")
+      .select("body,sender_role,created_at")
+      .eq("client_id",user.id)
       .order("created_at",{ascending:true});
 
     $("messages").innerHTML = msgError
       ? "<p>Messages could not be loaded.</p>"
-      : (messages?.length ? messages.map(m=>`
-        <div class="item"><strong>${m.sender_role==="admin"?"TaxReady Books":"You"}</strong>
-        <div>${escapeHtml(m.body)}</div>
-        <small class="muted">${new Date(m.created_at).toLocaleString()}</small></div>`).join("")
-        : "<p class='muted'>No messages yet.</p>");
+      : (
+          messages?.length
+          ? messages.map(m=>`
+              <div class="item">
+                <strong>
+                  ${m.sender_role==="admin" ? "TaxReady Books" : "You"}
+                </strong>
+
+                <div>${escapeHtml(m.body)}</div>
+
+                <small class="muted">
+                  ${new Date(m.created_at).toLocaleString()}
+                </small>
+              </div>
+            `).join("")
+          : "<p class='muted'>No messages yet.</p>"
+        );
   }
 
   window.openDocument = async (id, encodedPath) => {
+
     const path = decodeURIComponent(encodedPath);
-    const {data,error} = await sb.storage.from("client-documents").createSignedUrl(path,300);
-    if(error || !data?.signedUrl){ alert("Could not open this document."); return; }
-    window.open(data.signedUrl,"_blank","noopener");
+
+    const {data,error} = await sb
+      .storage
+      .from("client-documents")
+      .createSignedUrl(path,300);
+
+    if(error || !data?.signedUrl){
+      alert("Could not open this document.");
+      return;
+    }
+
+    window.open(
+      data.signedUrl,
+      "_blank",
+      "noopener"
+    );
   };
 
   $("messageForm").onsubmit = async e => {
+
     e.preventDefault();
+
     const body = $("messageText").value.trim();
+
     if(!body) return;
+
     const {data:{user}} = await sb.auth.getUser();
-    const {error} = await sb.from("messages").insert({client_id:user.id,body,sender_role:"client"});
-    $("messageStatus").textContent = error ? error.message : "Message sent.";
-    if(!error){ $("messageText").value=""; await loadPortal(); }
+
+    const {error} = await sb
+      .from("messages")
+      .insert({
+        client_id:user.id,
+        body,
+        sender_role:"client"
+      });
+
+    $("messageStatus").textContent = error
+      ? error.message
+      : "Message sent.";
+
+    if(!error){
+      $("messageText").value="";
+      await loadPortal();
+    }
   };
 
   $("saveProfile").onclick = async () => {
+
     const {data:{user}} = await sb.auth.getUser();
-    const {error} = await sb.from("profiles").upsert({id:user.id,full_name:$("fullName").value.trim()});
-    $("profileStatus").textContent = error ? error.message : "Profile saved.";
+
+    const {error} = await sb
+      .from("profiles")
+      .upsert({
+        id:user.id,
+        full_name:$("fullName").value.trim()
+      });
+
+    $("profileStatus").textContent = error
+      ? error.message
+      : "Profile saved.";
   };
 
-  function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+  function escapeHtml(v){
+    return String(v??"").replace(
+      /[&<>"']/g,
+      c => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[c])
+    );
+  }
 
   sb.auth.onAuthStateChange((_event,session)=>{
-    if(session){showPortal(session.user); loadPortal();}
-    else showAuth();
+    if(session){
+      showPortal(session.user);
+      loadPortal();
+    }
+    else{
+      showAuth();
+    }
   });
 
-  (async()=>{const {data:{session}}=await sb.auth.getSession(); if(session){showPortal(session.user);loadPortal();}});
+  (async()=>{
+    const {data:{session}} = await sb.auth.getSession();
+
+    if(session){
+      showPortal(session.user);
+      loadPortal();
+    }
+  })();
+
 </script>
 </body>
 </html>
