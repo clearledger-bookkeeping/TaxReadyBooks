@@ -374,9 +374,13 @@
 
           <div class="selected-client">
 
-            <h3 id="selectedClientName">Client</h3>
-
-            <div id="selectedClientEmail" class="muted"></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+              <div>
+                <h3 id="selectedClientName">Client</h3>
+                <div id="selectedClientEmail" class="muted"></div>
+              </div>
+              <button id="videoCallBtn">📹 Start video call</button>
+            </div>
 
           </div>
 
@@ -977,7 +981,7 @@
     } = await sb
       .from("documents")
       .select("*")
-      .eq("user_id", selectedClient.id)
+      .eq("client_id", selectedClient.id)
       .order("created_at", {
         ascending: false
       });
@@ -1023,7 +1027,7 @@
 
           <div>
             <div class="document-name">
-              ${escapeHtml(doc.file_name || "Document")}
+              ${escapeHtml(doc.title || "Document")}
             </div>
 
             <div class="muted">
@@ -1313,8 +1317,11 @@
             user_id:
               selectedClient.id,
 
-            file_name:
+            title:
               file.name,
+
+            description:
+              "Uploaded by TaxReady Books",
 
             storage_path:
               uploadData.path
@@ -1396,7 +1403,7 @@
     } = await sb
       .from("messages")
       .select("*")
-      .eq("user_id", selectedClient.id)
+      .eq("client_id", selectedClient.id)
       .order("created_at", {
         ascending: true
       });
@@ -1527,7 +1534,7 @@
         .from("messages")
         .insert({
 
-          user_id:
+          client_id:
             selectedClient.id,
 
           sender_role:
@@ -1575,6 +1582,19 @@
 
   });
 
+
+  document.getElementById("videoCallBtn").addEventListener("click", function () {
+    if (!selectedClient) return;
+    const room = "taxreadybooks-" + selectedClient.id.replace(/-/g,"");
+    window.open("https://meet.jit.si/" + room, "_blank", "noopener");
+  });
+
+  setInterval(async function () {
+    if (selectedClient) {
+      await loadMessages();
+      await loadDocuments();
+    }
+  }, 5000);
 
   /* =========================================================
      AUTH STATE CHANGES
