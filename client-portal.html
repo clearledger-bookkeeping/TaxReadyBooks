@@ -6,108 +6,23 @@
   <title>TaxReady Books | Client Portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-
-    :root{
-      --navy:#102a43;
-      --green:#1f5c4d;
-      --green-dark:#17483d;
-      --cream:#f7f8f6;
-      --surface:#ffffff;
-      --line:#e4e9e6;
-      --muted:#6b756f;
-      --shadow:0 10px 35px rgba(16,42,67,.07);
-      --radius:18px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:linear-gradient(180deg,#f7f9f7 0%,#eef3f0 100%);
-      color:var(--navy);
-      min-height:100vh;
-    }
-    .wrap{max-width:1180px;margin:auto;padding:28px 22px 50px}
-    .brand{
-      display:flex;align-items:center;gap:12px;
-      font-size:20px;font-weight:800;letter-spacing:-.3px;
-      margin-bottom:28px;color:var(--navy)
-    }
-    .brand:before{
-      content:"TB";display:grid;place-items:center;width:38px;height:38px;
-      border-radius:11px;background:var(--green);color:#fff;font-size:13px;font-weight:800;
-      box-shadow:0 6px 16px rgba(31,92,77,.22)
-    }
-    .card{
-      background:rgba(255,255,255,.96);
-      border:1px solid rgba(228,233,230,.95);
-      border-radius:var(--radius);
-      padding:26px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
-    h1,h2,h3{letter-spacing:-.4px}
-    h1{font-size:28px;margin:0 0 8px}
-    h2{font-size:19px;margin:0 0 8px}
-    input,textarea{
-      width:100%;box-sizing:border-box;padding:13px 14px;margin:8px 0 15px;
-      border:1px solid #d8e0db;border-radius:11px;font:inherit;color:var(--navy);
-      background:#fbfcfb;outline:none;transition:.18s;
-    }
-    input:focus,textarea:focus{border-color:#7da99c;box-shadow:0 0 0 4px rgba(31,92,77,.09);background:#fff}
-    button{
-      border:0;border-radius:11px;padding:12px 17px;cursor:pointer;font-weight:750;
-      font:inherit;transition:transform .15s,box-shadow .15s,background .15s; 
-    }
-    button:hover{transform:translateY(-1px)}
-    button:disabled{opacity:.55;cursor:not-allowed;transform:none}
-    .primary{background:var(--green);color:white;box-shadow:0 5px 14px rgba(31,92,77,.16)}
-    .primary:hover{background:var(--green-dark)}
-    .secondary{background:#edf1ef;color:var(--navy)}
-    .row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .hidden{display:none!important}
-    .muted{color:var(--muted)}
-    .item{padding:17px 0;border-bottom:1px solid var(--line)}
-    .item:last-child{border-bottom:0}
-    .msg{padding:12px;border-radius:10px;background:#eef5ff;margin:10px 0}
-    a{color:var(--green)}
-    #portal>.card:first-of-type{
-      background:linear-gradient(135deg,#ffffff,#f3f8f5);
-      padding:30px;
-    }
-    #documents,#messages{margin-top:12px}
-    #messageForm{margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
-    #clientFile{background:#fff}
-    #uploadClientFile{margin-top:0}
-    #callAlert{
-      border:1px solid #9bc8b9!important;background:#eef8f4!important;
-      box-shadow:0 10px 28px rgba(31,92,77,.10)
-    }
-    .portal-overlay{
-      position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
-      padding:20px;background:rgba(16,42,67,.58);backdrop-filter:blur(8px)
-    }
-    .portal-overlay.hidden{display:none}
-    .portal-modal{
-      width:min(520px,100%);background:#fff;border:1px solid #e2e8e4;border-radius:22px;
-      padding:32px;box-shadow:0 28px 80px rgba(16,42,67,.25)
-    }
-    .portal-modal h2{margin:0 0 8px}.portal-modal p{margin:0 0 22px;color:var(--muted)}
-    .portal-options{display:grid;gap:12px}
-    .portal-option{
-      width:100%;text-align:left;padding:18px;border:1px solid #dce4df;border-radius:14px;
-      background:#fff;color:var(--navy)
-    }
-    .portal-option:hover{background:#f5f8f6;border-color:#a8beb5;box-shadow:0 5px 15px rgba(16,42,67,.06)}
-    .portal-option strong{display:block;font-size:16px;margin-bottom:5px}
-    .portal-option span{display:block;font-size:13px;font-weight:400;color:var(--muted)}
-    .portal-close{margin-top:14px;width:100%;background:#edf1ef;color:var(--navy)}
-    @media(max-width:700px){
-      .wrap{padding:20px 14px 35px}.card{padding:20px}
-      .brand{margin-bottom:20px}h1{font-size:24px}
-      #videoCallBtn,#signOut{width:100%}
-    }
-
-  </style>
+:root{--navy:#102a43;--green:#1f5c4d;--green-dark:#17483d;--bg:#f4f7f5;--surface:#fff;--line:#e2e8e5;--muted:#718079;--shadow:0 12px 34px rgba(16,42,67,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--navy);min-height:100vh}
+.wrap{max-width:1180px;margin:auto;padding:24px 20px 48px}.brand{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:800;margin-bottom:22px}.brand:before{content:"TB";display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--green);color:#fff;font-size:13px;box-shadow:0 7px 18px rgba(31,92,77,.22)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px}h1,h2,h3{letter-spacing:-.35px}h1{font-size:27px;margin:0 0 6px}h2{font-size:19px;margin:0 0 5px}h3{font-size:15px;margin:0 0 5px}.muted{color:var(--muted);font-size:13px}.hidden{display:none!important}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}input,textarea{width:100%;padding:13px 14px;margin:7px 0 14px;border:1px solid #d7e1dc;border-radius:11px;background:#fbfcfb;color:var(--navy);font:inherit;outline:none}input:focus,textarea:focus{border-color:#78a394;box-shadow:0 0 0 4px rgba(31,92,77,.08);background:#fff}
+button{border:0;border-radius:11px;padding:11px 16px;cursor:pointer;font:inherit;font-weight:750;transition:.15s}button:hover{transform:translateY(-1px)}button:disabled{opacity:.55;cursor:not-allowed;transform:none}.primary{background:var(--green);color:#fff;box-shadow:0 6px 15px rgba(31,92,77,.16)}.primary:hover{background:var(--green-dark)}.secondary{background:#edf2ef;color:var(--navy)}
+.portal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:26px;background:linear-gradient(135deg,#fff,#f1f7f4)}.eyebrow{font-size:12px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.portal-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.title-wrap{display:flex;align-items:center;gap:11px}.section-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#eef5f1;font-size:18px}
+.chat-window{height:410px;overflow:auto;background:#f7faf8;border:1px solid var(--line);border-radius:15px;padding:15px}.chat-row{display:flex;margin:9px 0}.chat-row.mine{justify-content:flex-end}.chat-bubble{max-width:78%;padding:10px 13px;border-radius:15px;background:#fff;border:1px solid var(--line);box-shadow:0 2px 7px rgba(16,42,67,.04)}.chat-row.mine .chat-bubble{background:var(--green);color:#fff;border-color:var(--green)}.chat-time{display:block;font-size:10px;opacity:.65;margin-top:5px}
+#messageForm{display:flex;gap:10px;align-items:flex-end;margin-top:14px}#messageForm textarea{margin:0;min-height:52px;resize:none}#messageForm button{height:52px;white-space:nowrap}
+.document-drop{border:1.5px dashed #aebfb7;border-radius:15px;padding:20px;background:#f8fbf9;margin-bottom:15px}.document-drop input{background:#fff}.document-list{max-height:430px;overflow:auto}.item{padding:13px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}
+.doc-card{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:13px;margin-bottom:9px;background:#fff}.doc-card strong{display:block;word-break:break-word}
+.side-card{position:sticky;top:18px}.quick-action{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:13px;margin-top:9px;background:#fff}.quick-action strong{font-size:14px}.quick-action span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+#callAlert{border:1px solid #9bc8b9!important;background:#eef8f4!important;box-shadow:0 10px 28px rgba(31,92,77,.10)}#callAlert .call-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.portal-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(16,42,67,.58);backdrop-filter:blur(8px)}.portal-modal{width:min(520px,100%);background:#fff;border-radius:22px;padding:30px;box-shadow:0 28px 80px rgba(16,42,67,.25)}.portal-modal h2{margin:0 0 8px}.portal-modal p{margin:0 0 22px;color:var(--muted)}.portal-options{display:grid;gap:12px}.portal-option{width:100%;text-align:left;padding:18px;border:1px solid #dce4df;border-radius:14px;background:#fff;color:var(--navy)}.portal-option strong{display:block;margin-bottom:5px}.portal-option span{display:block;font-size:13px;color:var(--muted);font-weight:400}.portal-close{margin-top:14px;width:100%;background:#edf1ef;color:var(--navy)}
+@media(max-width:900px){.portal-grid{grid-template-columns:1fr}.side-card{position:static}}@media(max-width:620px){.wrap{padding:16px 12px 35px}.card{padding:18px}.portal-head{align-items:flex-start;flex-direction:column}.portal-head button{width:100%}.chat-window{height:360px}.chat-bubble{max-width:88%}#messageForm{align-items:stretch;flex-direction:column}#messageForm button{width:100%}.doc-card{align-items:flex-start;flex-direction:column}.doc-card button{width:100%}#callAlert .call-inner{align-items:stretch;flex-direction:column}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -136,71 +51,50 @@
   </section>
 
   <section id="portal" class="hidden">
-
-    <div id="callAlert" class="card hidden" style="border:2px solid #173f35;background:#eef8f4">
-      <h2 style="margin-top:0">📹 TaxReady Books is calling you</h2>
-      <p class="muted">Your bookkeeper has started a video call with you.</p>
+  <div id="callAlert" class="card hidden">
+    <div class="call-inner">
+      <div><div class="eyebrow">Incoming call</div><h2>📹 TaxReady Books is calling you</h2><p class="muted">Your bookkeeper has started a private video call with you.</p></div>
       <button class="primary" id="joinCallBtn">Join video call</button>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="row">
-        <div>
-          <h1>Welcome</h1>
-          <p id="userEmail" class="muted"></p>
+  <div class="card portal-head">
+    <div><div class="eyebrow">Client Portal</div><h1>Welcome back</h1><p id="userEmail" class="muted"></p></div>
+    <button class="secondary" id="signOut">Sign out</button>
+  </div>
+
+  <div class="portal-grid">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div class="title-wrap"><div class="section-icon">💬</div><div><h2>Messenger</h2><div class="muted">Private conversation with TaxReady Books</div></div></div>
+          <button class="primary" id="videoCallBtn">📹 Call TaxReady Books</button>
         </div>
+        <div id="messages" class="chat-window">Loading…</div>
+        <form id="messageForm"><textarea id="messageText" rows="2" maxlength="2000" placeholder="Write a message to TaxReady Books…"></textarea><button class="primary" type="submit">Send</button></form>
+        <p id="messageStatus" class="muted"></p>
+      </section>
 
-        <button class="secondary" id="signOut">Sign out</button>
+      <section class="card">
+        <div class="section-head">
+          <div class="title-wrap"><div class="section-icon">📁</div><div><h2>Documents</h2><div class="muted">Send files securely to your bookkeeper</div></div></div>
+        </div>
+        <div class="document-drop"><h3>Send a document</h3><p class="muted">Upload PDF, Word, Excel, images, ZIP files, receipts, statements, or other bookkeeping files.</p><input id="clientFile" type="file"><button class="primary" id="uploadClientFile">Upload document</button><p id="fileStatus" class="muted"></p></div>
+        <div id="documents" class="document-list">Loading…</div>
+      </section>
+    </main>
+
+    <aside>
+      <div class="card side-card">
+        <h3>Quick actions</h3>
+        <div class="quick-action"><span>💬</span><div><strong>Messenger</strong><span>Chat with TaxReady Books</span></div></div>
+        <div class="quick-action"><span>📹</span><div><strong>Video call</strong><span>Call your bookkeeper</span></div></div>
+        <div class="quick-action"><span>📁</span><div><strong>Documents</strong><span>Send or open files</span></div></div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="row">
-        <h2 style="margin:0">My documents</h2>
-        <button class="secondary" id="videoCallBtn">📹 Start video call</button>
-      </div>
-      <p class="muted">Upload files for TaxReady Books, or open files your bookkeeper has uploaded.</p>
-      <div style="margin:15px 0">
-        <input id="clientFile" type="file">
-        <button class="primary" id="uploadClientFile">Upload file</button>
-        <p id="fileStatus" class="muted"></p>
-      </div>
-      <div id="documents">Loading…</div>
-    </div>
-
-    <div class="card">
-      <h2>Messages</h2>
-
-      <div id="messages">Loading…</div>
-
-      <form id="messageForm">
-        <textarea
-          id="messageText"
-          rows="4"
-          maxlength="2000"
-          placeholder="Write a message to TaxReady Books…"
-        ></textarea>
-
-        <button class="primary" type="submit">Send message</button>
-      </form>
-
-      <p id="messageStatus" class="muted"></p>
-    </div>
-
-    <div class="card">
-      <h2>My profile</h2>
-
-      <label>
-        Full name
-        <input id="fullName">
-      </label>
-
-      <button class="primary" id="saveProfile">Save profile</button>
-
-      <p id="profileStatus" class="muted"></p>
-    </div>
-
-  </section>
+      <div class="card"><h3>My profile</h3><p class="muted">Keep your contact name up to date.</p><label>Full name<input id="fullName"></label><button class="primary" id="saveProfile">Save profile</button><p id="profileStatus" class="muted"></p></div>
+    </aside>
+  </div>
+</section>
 </div>
 
 <div id="portalChooser" class="portal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="portalChooserTitle">
