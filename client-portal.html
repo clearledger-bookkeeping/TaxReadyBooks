@@ -102,7 +102,16 @@
     </div>
 
     <div class="card">
-      <h2>My documents</h2>
+      <div class="row">
+        <h2 style="margin:0">My documents</h2>
+        <button class="secondary" id="videoCallBtn">📹 Start video call</button>
+      </div>
+      <p class="muted">Upload files for TaxReady Books, or open files your bookkeeper has uploaded.</p>
+      <div style="margin:15px 0">
+        <input id="clientFile" type="file">
+        <button class="primary" id="uploadClientFile">Upload file</button>
+        <p id="fileStatus" class="muted"></p>
+      </div>
       <div id="documents">Loading…</div>
     </div>
 
@@ -337,6 +346,45 @@
     );
   };
 
+  $("videoCallBtn").onclick = async () => {
+    const {data:{user}} = await sb.auth.getUser();
+    if (!user) return;
+    const room = "taxreadybooks-" + user.id.replace(/-/g,"");
+    window.open("https://meet.jit.si/" + room, "_blank", "noopener");
+  };
+
+  $("uploadClientFile").onclick = async () => {
+    const file = $("clientFile").files[0];
+    if (!file) { $("fileStatus").textContent = "Please choose a file first."; return; }
+    const {data:{user}} = await sb.auth.getUser();
+    if (!user) return;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+    const path = user.id + "/" + Date.now() + "-" + safeName;
+    $("uploadClientFile").disabled = true;
+    $("fileStatus").textContent = "Uploading…";
+    try {
+      const {data:up,error:upError} = await sb.storage.from("client-documents").upload(path,file,{cacheControl:"3600",upsert:false});
+      if (upError) throw upError;
+      const {error:dbError} = await sb.from("documents").insert({
+        client_id:user.id,
+        title:file.name,
+        description:"Uploaded by client",
+        storage_path:up.path
+      });
+      if (dbError) {
+        await sb.storage.from("client-documents").remove([up.path]);
+        throw dbError;
+      }
+      $("clientFile").value="";
+      $("fileStatus").textContent="File uploaded successfully.";
+      await loadPortal();
+    } catch(error) {
+      $("fileStatus").textContent="Upload failed: " + error.message;
+    } finally {
+      $("uploadClientFile").disabled=false;
+    }
+  };
+
   $("messageForm").onsubmit = async e => {
 
     e.preventDefault();
@@ -393,6 +441,11 @@
       }[c])
     );
   }
+
+  setInterval(async () => {
+    const {data:{session}} = await sb.auth.getSession();
+    if (session) await loadPortal();
+  }, 5000);
 
   sb.auth.onAuthStateChange((_event,session)=>{
     if(session){
