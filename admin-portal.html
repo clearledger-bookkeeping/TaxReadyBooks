@@ -1291,18 +1291,24 @@ button{border:0;border-radius:11px;padding:11px 16px;cursor:pointer;font:inherit
       if (inviteError) throw inviteError;
 
       let emailSent = false;
-      if (selectedClient.email) {
+      const {data:clientEmail, error:emailLookupError} = await sb.rpc("get_client_email", {
+        p_client_id: selectedClient.id
+      });
+
+      if (!emailLookupError && clientEmail) {
         const response = await fetch("/api/send-call-invite", {
           method: "POST",
           headers: {"Content-Type":"application/json"},
           body: JSON.stringify({
-            clientEmail: selectedClient.email,
+            clientEmail,
             clientName: selectedClient.full_name || "Client",
             joinUrl
           })
         });
         const result = await response.json().catch(()=>({}));
         emailSent = response.ok && result.success;
+      } else if (emailLookupError) {
+        console.warn("Client email lookup failed:", emailLookupError);
       }
 
       window.open(joinUrl, "_blank", "noopener");
@@ -1316,7 +1322,9 @@ button{border:0;border-radius:11px;padding:11px 16px;cursor:pointer;font:inherit
       );
     } catch (error) {
       console.error(error);
-      showMessage(globalMessage, "Could not start the call: " + error.message, "error");
+      showMessage(globalMessage, error.message && error.message.includes("call_invites")
+        ? "Call system is not set up yet. Run video-call-setup.sql in Supabase SQL Editor, then refresh this page."
+        : "Could not start the call: " + error.message, "error");
     } finally {
       videoCallBtn.disabled = false;
       videoCallBtn.textContent = "📹 Start video call";
