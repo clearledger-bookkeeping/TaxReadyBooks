@@ -90,6 +90,12 @@
 
   <section id="portal" class="hidden">
 
+    <div id="callAlert" class="card hidden" style="border:2px solid #173f35;background:#eef8f4">
+      <h2 style="margin-top:0">📹 TaxReady Books is calling you</h2>
+      <p class="muted">Your bookkeeper has started a video call with you.</p>
+      <button class="primary" id="joinCallBtn">Join video call</button>
+    </div>
+
     <div class="card">
       <div class="row">
         <div>
@@ -261,11 +267,15 @@
 
     const {data:profile} = await sb
       .from("profiles")
-      .select("full_name")
+      .select("full_name, role, email")
       .eq("id",user.id)
       .maybeSingle();
 
     $("fullName").value = profile?.full_name || "";
+
+    if (profile?.email !== user.email) {
+      await sb.from("profiles").update({email:user.email}).eq("id", user.id);
+    }
 
     showPortalChooser(profile?.role === "admin");
 
@@ -346,11 +356,72 @@
     );
   };
 
+  let currentCallInviteId = null;
+
+  async function checkIncomingCall() {
+    const {data:{user}} = await sb.auth.getUser();
+    if (!user) return;
+
+    const {data:invite} = await sb
+      .from("call_invites")
+      .select("id,room,created_at,status,initiated_by")
+      .eq("client_id", user.id)
+      .eq("initiated_by", "admin")
+      .eq("status", "pending")
+      .order("created_at",{ascending:false})
+      .limit(1)
+      .maybeSingle();
+
+    if (!invite) {
+      $("callAlert").classList.add("hidden");
+      currentCallInviteId = null;
+      return;
+    }
+
+    if (Date.now() - new Date(invite.created_at).getTime() > 30*60*1000) {
+      await sb.from("call_invites").update({status:"dismissed"}).eq("id",invite.id);
+      $("callAlert").classList.add("hidden");
+      return;
+    }
+
+    currentCallInviteId = invite.id;
+    $("callAlert").classList.remove("hidden");
+  }
+
   $("videoCallBtn").onclick = async () => {
     const {data:{user}} = await sb.auth.getUser();
     if (!user) return;
     const room = "taxreadybooks-" + user.id.replace(/-/g,"");
+
+    const {error} = await sb.from("call_invites").insert({
+      client_id:user.id,
+      room,
+      initiated_by:"client",
+      status:"pending"
+    });
+
+    if (error) {
+      alert("Could not start the call: " + error.message);
+      return;
+    }
+
     window.open("https://meet.jit.si/" + room, "_blank", "noopener");
+  };
+
+  $("joinCallBtn").onclick = async () => {
+    if (!currentCallInviteId) return;
+
+    const {data:invite} = await sb
+      .from("call_invites")
+      .select("id,room")
+      .eq("id",currentCallInviteId)
+      .maybeSingle();
+
+    if (!invite) return;
+
+    await sb.from("call_invites").update({status:"joined"}).eq("id",invite.id);
+    window.open("https://meet.jit.si/" + invite.room, "_blank", "noopener");
+    $("callAlert").classList.add("hidden");
   };
 
   $("uploadClientFile").onclick = async () => {
@@ -441,6 +512,8 @@
       }[c])
     );
   }
+
+  setInterval(checkIncomingCall, 3000);
 
   setInterval(async () => {
     const {data:{session}} = await sb.auth.getSession();
