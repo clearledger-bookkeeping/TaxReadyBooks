@@ -399,12 +399,13 @@
             <h3>Upload Document</h3>
 
             <p class="muted">
-              Upload a document for this client.
+              Upload any file type for this client — PDF, Word, Excel, images, ZIP, receipts, bank statements, or other bookkeeping files.
             </p>
 
             <input
               type="file"
               id="documentFile"
+              accept="*/*"
             >
 
             <button id="uploadDocumentBtn">
@@ -639,7 +640,7 @@
       error: profileError
     } = await sb
       .from("profiles")
-      .select("id, full_name, role, email")
+      .select("id, full_name, role")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -884,9 +885,7 @@
         "Unnamed client";
 
 
-      const email =
-        client.email ||
-        "Email not registered yet";
+      const email = "Client email will be used for call notification";
 
 
       div.innerHTML = `
@@ -953,8 +952,7 @@
 
 
     selectedClientEmail.textContent =
-      client.email ||
-      "Email not registered yet";
+      "Client email will be used for call notification";
 
 
     await loadDocuments();
