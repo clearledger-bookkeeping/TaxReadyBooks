@@ -340,7 +340,9 @@ button{border:0;border-radius:11px;padding:11px 16px;cursor:pointer;font:inherit
     });
 
     if (error) {
-      alert("Could not start the call: " + error.message);
+      alert(error.message && error.message.includes("call_invites")
+        ? "Call system is not set up yet. Run video-call-setup.sql in Supabase SQL Editor, then refresh this page."
+        : "Could not start the call: " + error.message);
       return;
     }
 
