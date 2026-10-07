@@ -208,3 +208,26 @@ using (
 --
 -- Replace YOUR-ADMIN-EMAIL with the email you used for the admin account.
 -- ============================================================
+
+
+-- ============================================================
+-- CLIENT FILE UPLOAD SUPPORT
+-- Run this section in Supabase SQL Editor after the original setup.
+-- ============================================================
+
+create policy "client_insert_own_documents"
+on public.documents for insert
+to authenticated
+with check (client_id = auth.uid());
+
+create policy "clients_insert_own_document_files"
+on storage.objects for insert
+to authenticated
+with check (
+  bucket_id='client-documents'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+
+-- Keep messages and documents available to the portal in real time.
+alter publication supabase_realtime add table public.messages;
+alter publication supabase_realtime add table public.documents;
