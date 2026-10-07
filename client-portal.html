@@ -267,15 +267,13 @@
 
     const {data:profile} = await sb
       .from("profiles")
-      .select("full_name, role, email")
+      .select("full_name, role")
       .eq("id",user.id)
       .maybeSingle();
 
     $("fullName").value = profile?.full_name || "";
 
-    if (profile?.email !== user.email) {
-      await sb.from("profiles").update({email:user.email}).eq("id", user.id);
-    }
+
 
     showPortalChooser(profile?.role === "admin");
 
