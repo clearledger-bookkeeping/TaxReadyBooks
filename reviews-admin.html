@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TaxReady Books | Reviews Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:Arial,sans-serif;background:#f6f7f9;color:#18212b;margin:0}.wrap{max-width:1000px;margin:auto;padding:30px 18px}
+.card{background:#fff;border-radius:16px;padding:24px;margin-bottom:18px;box-shadow:0 8px 30px rgba(0,0,0,.06)}
+input,textarea{width:100%;box-sizing:border-box;padding:12px;margin:7px 0 14px;border:1px solid #ccd2d8;border-radius:9px;font:inherit}
+button{padding:10px 15px;border:0;border-radius:9px;cursor:pointer;font-weight:700;margin-right:8px}.primary{background:#18212b;color:#fff}.danger{background:#b42318;color:#fff}.secondary{background:#e9edf1}
+.hidden{display:none}.review{border-top:1px solid #e4e7ea;padding:20px 0}.stars{letter-spacing:2px}.muted{color:#66717c}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TaxReady Books — Reviews Admin</h1>
+
+<section id="login" class="card">
+<h2>Admin sign in</h2>
+<input id="email" type="email" placeholder="Admin email">
+<input id="password" type="password" placeholder="Password">
+<button class="primary" id="loginBtn">Sign in</button>
+<p id="loginMsg" class="muted"></p>
+</section>
+
+<section id="admin" class="hidden">
+<div class="card">
+<button class="secondary" id="logoutBtn">Sign out</button>
+<p id="status" class="muted"></p>
+</div>
+<div class="card">
+<h2>Reviews</h2>
+<div id="reviews">Loading…</div>
+</div>
+</section>
+</div>
+
+<script>
+const SUPABASE_URL="PASTE-YOUR-SUPABASE-URL-HERE";
+const SUPABASE_ANON_KEY="PASTE-YOUR-SUPABASE-ANON-KEY-HERE";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const $=id=>document.getElementById(id);
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function stars(n){return "★".repeat(Number(n))+"☆".repeat(5-Number(n));}
+
+async function isAdmin(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user) return false;
+  const {data,error}=await sb.from("profiles").select("role").eq("id",user.id).maybeSingle();
+  return !error && data?.role==="admin";
+}
+
+async function loadReviews(){
+  const {data,error}=await sb.from("reviews")
+    .select("id,name,email,rating,comment,approved,created_at")
+    .order("created_at",{ascending:false});
+  if(error){$("reviews").innerHTML="<p>Could not load reviews: "+esc(error.message)+"</p>";return;}
+  $("reviews").innerHTML=data?.length?data.map(r=>`
+    <article class="review">
+      <strong>${esc(r.name)}</strong> — ${esc(r.email)}
+      <div class="stars">${stars(r.rating)}</div>
+      <p>${esc(r.comment)}</p>
+      <small class="muted">${new Date(r.created_at).toLocaleString()} · ${r.approved?"Approved":"Waiting for approval"}</small><br><br>
+      ${r.approved
+        ? `<button class="secondary" onclick="setApproval('${r.id}',false)">Unapprove</button>`
+        : `<button class="primary" onclick="setApproval('${r.id}',true)">Approve</button>`}
+      <button class="danger" onclick="deleteReview('${r.id}')">Delete</button>
+    </article>`).join(""):"<p>No reviews yet.</p>";
+}
+
+window.setApproval=async(id,approved)=>{
+  const {error}=await sb.from("reviews").update({approved}).eq("id",id);
+  $("status").textContent=error?error.message:"Review updated.";
+  await loadReviews();
+};
+
+window.deleteReview=async id=>{
+  if(!confirm("Delete this review permanently?"))return;
+  const {error}=await sb.from("reviews").delete().eq("id",id);
+  $("status").textContent=error?error.message:"Review deleted.";
+  await loadReviews();
+};
+
+$("loginBtn").onclick=async()=>{
+  $("loginMsg").textContent="Signing in…";
+  const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+  if(error){$("loginMsg").textContent=error.message;return;}
+  if(!(await isAdmin())){await sb.auth.signOut();$("loginMsg").textContent="This account is not an admin account.";return;}
+  $("login").classList.add("hidden");$("admin").classList.remove("hidden");await loadReviews();
+};
+
+$("logoutBtn").onclick=async()=>{await sb.auth.signOut();$("admin").classList.add("hidden");$("login").classList.remove("hidden");};
+</script>
+</body>
+</html>
