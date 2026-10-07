@@ -47,3 +47,28 @@ BEGIN
     ALTER PUBLICATION supabase_realtime ADD TABLE public.call_invites;
   END IF;
 END $$;
+
+-- Securely return one client's auth email to an authenticated admin.
+create or replace function public.get_client_email(p_client_id uuid)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'admin'
+  ) then
+    raise exception 'Not authorized';
+  end if;
+
+  return (select email from auth.users where id = p_client_id);
+end;
+$$;
+
+revoke all on function public.get_client_email(uuid) from public;
+grant execute on function public.get_client_email(uuid) to authenticated;
+
+-- Ask PostgREST to refresh its schema cache after creating the table/function.
+notify pgrst, 'reload schema';
