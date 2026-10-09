@@ -237,6 +237,31 @@
       max-width: 490px;
       margin-inline: auto;
     }
+    .hero-video-wrap { width: 100%; max-width: 560px; }
+    .hero-video-frame {
+      position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 4 / 4.35;
+      min-height: 390px; border-radius: 30px; background: #1B1F3B;
+      box-shadow: 0 30px 80px rgba(27,31,59,.22);
+      border: 1px solid rgba(242,163,58,.28);
+    }
+    .hero-video { position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover; }
+    .hero-video-shade { position:absolute; inset:0; z-index:1; pointer-events:none;
+      background:linear-gradient(180deg,rgba(15,19,43,.04) 25%,rgba(15,19,43,.22) 48%,rgba(15,19,43,.88) 100%); }
+    .hero-video-caption { position:absolute; z-index:2; left:clamp(20px,4vw,32px); right:24px; bottom:30px;
+      display:flex; flex-wrap:wrap; align-items:center; gap:10px; color:#fff; font-size:.68rem;
+      font-weight:700; letter-spacing:.13em; }
+    .hero-video-caption strong { display:block; flex-basis:100%; font-family:"Fraunces",Georgia,serif;
+      font-size:clamp(1.8rem,4vw,2.65rem); font-weight:600; letter-spacing:-.035em; line-height:1.08; }
+    .video-live-dot { width:7px;height:7px;border-radius:50%;background:#F2A33A;box-shadow:0 0 0 5px rgba(242,163,58,.16); }
+    .video-caption-rule { height:1px; width:28px; background:rgba(255,255,255,.6); }
+    .hero-video-badge { position:absolute;z-index:2;top:20px;right:20px;display:flex;align-items:center;gap:8px;
+      padding:10px 13px;border:1px solid rgba(255,255,255,.25);border-radius:999px;
+      color:#fff;background:rgba(22,26,55,.45);backdrop-filter:blur(14px);font-size:.76rem;font-weight:600; }
+    .hero-video-badge span { color:#F2A33A; }
+    @media(max-width:639px) { .hero-video-frame { min-height:0; aspect-ratio:4/4.3; border-radius:24px; }
+      .hero-video-badge { top:12px; right:12px; font-size:.68rem; padding:8px 10px; }
+      .hero-video-caption { bottom:22px; } }
+    @media(prefers-reduced-motion:reduce) { .hero-video { visibility:hidden; } .hero-video-frame { background:#1B1F3B url('/og-cover.svg') center/cover no-repeat; } }
     .visual-card {
       position: relative;
       min-height: 430px;
@@ -1149,28 +1174,20 @@ details[open] summary::after{background:#fff3e3;border-color:var(--saffron)}
           <p class="hero-note">Based in Tulsipur, Nepal · Serving small businesses remotely</p>
         </div>
 
-        <div class="hero-visual">
-          <div class="visual-card">
-            <div class="visual-top">
-              <span class="visual-dot"></span>
-              <span>QuickBooks Online</span>
-              <span class="visual-status">Books organized</span>
+        <div class="hero-visual hero-video-wrap">
+          <div class="hero-video-frame">
+            <video class="hero-video" autoplay muted loop playsinline preload="metadata"
+              poster="/og-cover.svg" aria-label="TaxReady Books cinematic homepage video">
+              <source src="/taxready-hero.mp4" type="video/mp4">
+            </video>
+            <div class="hero-video-shade" aria-hidden="true"></div>
+            <div class="hero-video-caption">
+              <span class="video-live-dot" aria-hidden="true"></span>
+              <span>BOOKKEEPING, IN FOCUS</span>
+              <span class="video-caption-rule" aria-hidden="true"></span>
+              <strong>Clarity in every number.</strong>
             </div>
-            <div class="report-card">
-              <div class="report-label">Illustrative report</div>
-              <div class="report-title">Monthly Summary</div>
-              <div class="report-list">
-                <div class="report-row"><span>Total Revenue</span><strong>$48,250</strong></div>
-                <div class="report-row"><span>Cost of Goods Sold</span><strong>$18,400</strong></div>
-                <div class="report-row gross"><span>Gross Profit</span><strong>$29,850</strong></div>
-                <div class="report-row"><span>Operating Expenses</span><strong>$9,100</strong></div>
-                <div class="report-row net"><span>Net Profit</span><strong>$20,750</strong></div>
-              </div>
-              <div class="report-foot">
-                <span class="report-chip">Bank Reconciliation ✓</span>
-                <span class="report-chip">P&amp;L Ready</span>
-              </div>
-            </div>
+            <div class="hero-video-badge"><span aria-hidden="true">✓</span> Books organized</div>
           </div>
         </div>
       </div>
@@ -1750,6 +1767,12 @@ details[open] summary::after{background:#fff3e3;border-color:var(--saffron)}
 <script>
 (() => {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.hero-video').forEach((video) => {
+    if (reduced) { video.pause(); video.removeAttribute('autoplay'); return; }
+    const playVideo = () => video.play().catch(() => {});
+    if (video.readyState >= 2) playVideo();
+    else video.addEventListener('canplay', playVideo, { once: true });
+  });
   const header = document.querySelector('.site-header');
   const layers = [...document.querySelectorAll('[data-depth]')];
   let ticking = false;
