@@ -8,7 +8,12 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="TaxReady Books | QuickBooks Online Bookkeeping">
   <meta property="og:description" content="QuickBooks Online bookkeeping: cleanup, catch-up and tax-ready monthly books.">
-  <meta property="og:image" content="data:image/png;base64,PLACEHOLDER">
+  <meta property="og:image" content="https://taxready-books.vercel.app/og-cover.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TaxReady Books | Clear books. Clear numbers.">
+  <meta name="twitter:description" content="QuickBooks Online cleanup, catch-up and monthly bookkeeping for small businesses.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://taxready-books.vercel.app/">
   <meta name="theme-color" content="#1B1F3B">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1004,6 +1009,45 @@ footer{position:relative}footer::before{content:'';display:block;position:absolu
 @media(min-width:900px){.hero-grid{gap:clamp(48px,6vw,86px)}.hero-copy{max-width:700px}.services-grid{gap:18px}.pricing-grid{gap:18px}.steps-grid{gap:18px}}
 @media(max-width:639px){.hero{padding:54px 0 60px}.hero h1{font-size:clamp(2.75rem,13vw,4.2rem)}.visual-card{min-height:400px;border-radius:24px}.section-head{margin-bottom:30px}.service-card{padding:24px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+  
+/* Signature one-page identity */
+.hero{isolation:isolate;background-image:radial-gradient(ellipse at 78% 32%,rgba(242,163,58,.16),transparent 34%),linear-gradient(rgba(27,31,59,.035) 1px,transparent 1px);background-size:auto,100% 32px}
+.hero::after{z-index:-1;background:linear-gradient(90deg,rgba(250,250,247,.93),rgba(250,250,247,.70),rgba(250,250,247,.86))}
+.parallax-scene{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
+.parallax-orb{position:absolute;display:block;border-radius:50%;will-change:transform}
+.parallax-orb-one{width:clamp(220px,32vw,480px);height:clamp(220px,32vw,480px);right:-5%;top:7%;border:1px solid rgba(242,163,58,.35);box-shadow:inset 0 0 80px rgba(242,163,58,.06)}
+.parallax-orb-two{width:clamp(130px,18vw,260px);height:clamp(130px,18vw,260px);right:19%;top:24%;background:radial-gradient(circle at 35% 30%,rgba(242,163,58,.15),rgba(242,163,58,.015) 68%,transparent 70%);border:1px solid rgba(27,31,59,.08)}
+.parallax-grid{position:absolute;width:42%;height:120%;right:0;top:-10%;opacity:.18;background-image:linear-gradient(90deg,rgba(27,31,59,.12) 1px,transparent 1px),linear-gradient(rgba(27,31,59,.12) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(90deg,transparent,#000)}
+.hero h1{font-size:clamp(3.25rem,7vw,6.25rem);letter-spacing:-.055em;line-height:.99;max-width:720px}
+.hero h1 em{text-decoration:none;position:relative;white-space:nowrap;z-index:0}
+.hero h1 em::after{content:"";position:absolute;z-index:-1;left:-.02em;right:-.02em;bottom:.05em;height:.14em;background:var(--saffron);border-radius:99px;opacity:.86}
+.hero-sub{line-height:1.8;max-width:560px}
+.hero-visual{filter:drop-shadow(0 28px 36px rgba(27,31,59,.10))}
+.visual-card{border:1px solid rgba(255,255,255,.14);box-shadow:0 28px 80px rgba(27,31,59,.2);transition:transform .55s cubic-bezier(.16,1,.3,1),box-shadow .55s cubic-bezier(.16,1,.3,1)}
+.visual-card:hover{box-shadow:0 38px 100px rgba(27,31,59,.24)}
+.site-header{transition:background .25s ease,box-shadow .25s ease}
+.site-header.scrolled{background:rgba(250,250,247,.97);box-shadow:0 8px 28px rgba(27,31,59,.07)}
+.nav-links a{position:relative}.nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:-7px;height:2px;background:var(--saffron);transition:right .25s ease}.nav-links a:hover::after{right:0}
+section{scroll-margin-top:88px;padding:clamp(70px,8vw,112px) 0}
+.section-head{gap:17px;margin-bottom:clamp(30px,4vw,46px)}
+.section-head h2{letter-spacing:-.045em}
+.card{box-shadow:0 8px 28px rgba(27,31,59,.045);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s cubic-bezier(.16,1,.3,1),border-color .3s ease}
+.card:hover{transform:translateY(-5px);box-shadow:0 22px 54px rgba(27,31,59,.095);border-color:#cbd1dc}
+.service-card{position:relative;overflow:hidden;padding:30px}
+.service-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--saffron);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.service-card:hover::after{transform:scaleX(1)}
+.icon-box{transition:transform .35s cubic-bezier(.16,1,.3,1),background .25s ease}
+.service-card:hover .icon-box{transform:translateY(-3px) rotate(-4deg);background:#ffe9c8}
+.price-card.featured{box-shadow:0 18px 48px rgba(242,163,58,.12)}
+.price-card.featured:hover{transform:translateY(-7px)}
+.about{position:relative;overflow:hidden}.about::before{content:"";position:absolute;width:480px;height:480px;border:1px solid rgba(255,255,255,.07);border-radius:50%;right:-230px;top:-180px;pointer-events:none}
+summary{transition:color .2s ease}summary:hover{color:#6b4a1d}
+summary::after{display:grid;place-items:center;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;flex:0 0 auto}
+details[open] summary::after{background:#fff3e3;border-color:var(--saffron)}
+.btn{transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s ease,background .25s ease}.btn:active{transform:scale(.98)}
+@media(max-width:639px){.hero{padding:54px 0 60px}.hero h1{font-size:clamp(2.8rem,13vw,4.2rem)}.visual-card{border-radius:24px}.parallax-orb-one{right:-34%;top:1%}.parallax-orb-two{right:8%;top:25%}.parallax-grid{width:80%;background-size:34px 34px}.service-card{padding:24px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.parallax-scene{display:none}}
+
   </style>
 
 <style>
@@ -1091,7 +1135,8 @@ footer{position:relative}footer::before{content:'';display:block;position:absolu
   </header>
 
   <main id="top">
-    <section class="hero">
+    <section class="hero" id="top">
+      <div class="parallax-scene" aria-hidden="true"><span class="parallax-orb parallax-orb-one" data-depth="0.12"></span><span class="parallax-orb parallax-orb-two" data-depth="0.22"></span><span class="parallax-grid" data-depth="0.06"></span></div>
       <div class="container hero-grid">
         <div class="hero-copy">
           <span class="eyebrow">QuickBooks Online bookkeeping</span>
@@ -1700,6 +1745,29 @@ footer{position:relative}footer::before{content:'';display:block;position:absolu
     })();
   </script>
 
+
+
+<script>
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const header = document.querySelector('.site-header');
+  const layers = [...document.querySelectorAll('[data-depth]')];
+  let ticking = false;
+  const update = () => {
+    const y = window.scrollY || 0;
+    if (header) header.classList.toggle('scrolled', y > 16);
+    if (!reduced) layers.forEach(layer => {
+      const depth = Number(layer.dataset.depth || 0);
+      layer.style.transform = 'translate3d(0,' + (y * depth) + 'px,0)';
+    });
+    ticking = false;
+  };
+  window.addEventListener('scroll', () => {
+    if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  update();
+})();
+</script>
 
 </body>
 </html>
