@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Referral Program | TaxReady Books</title>
-  <meta name="description" content="Refer a business to TaxReady Books. When they become a bookkeeping client, both of you receive an ongoing 10% discount on bookkeeping services.">
+  <meta name="description" content="Refer a business to TaxReady Books. The person who refers a new client receives an ongoing 10% bookkeeping discount, and the new client receives 5% off.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="TaxReady Books Referral Program">
-  <meta property="og:description" content="Refer a business. Both of you save 10% on ongoing bookkeeping services.">
+  <meta property="og:description" content="Refer a business. Referrers get 10% off ongoing bookkeeping services; new clients get 5% off.">
   <link rel="canonical" href="https://taxready-books.vercel.app/referral.html">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="theme-color" content="#1B1F3B">
@@ -103,14 +103,14 @@
         <div>
           <div class="eyebrow">The TaxReady Books referral program</div>
           <h1>Good referrals should be good for everyone.</h1>
-          <p class="lead">Know a business owner who could use clearer books? Introduce them to TaxReady Books. When they become a bookkeeping client, you both receive an ongoing 10% discount on bookkeeping services.</p>
+          <p class="lead">Know a business owner who could use clearer books? Introduce them to TaxReady Books. When they become a bookkeeping client, you receive an ongoing 10% discount on your bookkeeping, and they receive 5% off their bookkeeping services.</p>
           <div class="actions"><a class="button" href="#refer">Refer a business</a><a class="button secondary" href="/#services">Explore services</a></div>
         </div>
         <aside class="offer" aria-label="Referral offer">
-          <div class="offer-label">For both of you</div>
+          <div class="offer-label">Your referral reward</div>
           <div class="offer-number">10<span>% off</span></div>
-          <h2>Ongoing bookkeeping savings</h2>
-          <p>The person making the referral and the new client both receive the discount after the referred business starts bookkeeping services.</p>
+          <h2>For the person who refers</h2>
+          <p>Receive an ongoing 10% discount on your bookkeeping service fees when your referral becomes a client. Your new referral receives 5% off.</p>
         </aside>
       </div>
     </section>
@@ -124,7 +124,7 @@
         <div class="steps">
           <article class="step"><div class="step-num">01 / INTRODUCE</div><h3>Tell us who to contact</h3><p>Share your details and the business owner’s contact information using the referral form.</p></article>
           <article class="step"><div class="step-num">02 / GET CONNECTED</div><h3>We’ll follow up</h3><p>We’ll contact the business owner to discuss their bookkeeping needs, with their permission.</p></article>
-          <article class="step"><div class="step-num">03 / BOTH SAVE</div><h3>Enjoy 10% off</h3><p>When the referred business becomes a bookkeeping client, both of you receive an ongoing 10% discount on bookkeeping services.</p></article>
+          <article class="step"><div class="step-num">03 / BOTH SAVE</div><h3>Get your discounts</h3><p>Once the referred business becomes a bookkeeping client, you receive an ongoing 10% discount and the new client receives 5% off their bookkeeping services.</p></article>
         </div>
       </div>
     </section>
@@ -133,7 +133,7 @@
         <div><div class="eyebrow">A straightforward thank-you</div><h2>Share a service you trust.</h2></div>
         <div class="detail-copy">
           <p>TaxReady Books helps small businesses keep their QuickBooks Online records organized, reconciled, and ready for tax time. If someone in your network needs bookkeeping support, an introduction can help them find the right next step.</p>
-          <p class="note"><strong>How the discount works:</strong> the referral discount is 10% for both the referrer and the new client, and is intended to continue for as long as each remains a bookkeeping client. It applies to bookkeeping service fees, not tax preparation or tax advice, which TaxReady Books does not provide.</p>
+          <p class="note"><strong>How the discount works:</strong> the person who refers a new client receives an ongoing 10% discount on their bookkeeping service fees. The new client receives a 5% discount on their bookkeeping service fees. The referral discount applies to bookkeeping services only, not tax preparation or tax advice, which TaxReady Books does not provide.</p>
           <p>Please make sure the person you refer is happy for you to share their contact details with us.</p>
         </div>
       </div>
@@ -181,7 +181,7 @@
         'Referred contact: ' + (value('businessContact') || 'Not provided'),
         'Notes: ' + (value('notes') || 'None'),
         '',
-        'Referral offer: ongoing 10% bookkeeping discount for both parties when the referred business becomes a bookkeeping client.'
+        'Referral offer: referrer receives an ongoing 10% bookkeeping discount; new client receives 5% off bookkeeping service fees.'
       ].join('\n');
       document.getElementById('form-message').textContent = 'Your email app should open with the referral prepared. Please review and send it to complete the referral.';
       window.location.href = 'mailto:dipakkhadka.books@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
