@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referral Program | TaxReady Books</title>
+  <meta name="description" content="Refer a business to TaxReady Books. When they become a bookkeeping client, both of you receive an ongoing 10% discount on bookkeeping services.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TaxReady Books Referral Program">
+  <meta property="og:description" content="Refer a business. Both of you save 10% on ongoing bookkeeping services.">
+  <link rel="canonical" href="https://taxready-books.vercel.app/referral.html">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1B1F3B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#1B1F3B;--saffron:#F2A33A;--paper:#FAFAF7;--muted:#626578;--line:#deded7;--white:#fff}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,Arial,sans-serif;line-height:1.65}
+    a{color:inherit}
+    .container{width:min(1120px,calc(100% - 44px));margin-inline:auto}
+    header{border-bottom:1px solid var(--line);background:rgba(250,250,247,.96)}
+    .nav{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .wordmark{display:inline-flex;align-items:center;gap:11px;text-decoration:none;font-weight:700;letter-spacing:-.035em}
+    .mark{width:34px;height:34px;display:grid;place-items:center;background:var(--ink);color:var(--paper)}
+    .mark svg{width:21px;height:21px}
+    .nav-links{display:flex;align-items:center;gap:25px;font-size:13px;font-weight:600}
+    .nav-links a{text-decoration:none}
+    .nav-links a:hover,.text-link:hover{text-decoration:underline;text-underline-offset:4px}
+    .button{display:inline-flex;justify-content:center;align-items:center;min-height:48px;padding:0 21px;background:var(--ink);color:white;text-decoration:none;border:1px solid var(--ink);font-size:13px;font-weight:700;cursor:pointer}
+    .button:hover{background:#292e51}
+    .button.secondary{background:transparent;color:var(--ink)}
+    .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#7b5a25}
+    .hero{padding:84px 0 76px;border-bottom:1px solid var(--line)}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:72px;align-items:center}
+    h1,h2,h3,p{margin-top:0}
+    h1,h2,h3{letter-spacing:-.045em;line-height:1.12}
+    h1{font-family:Fraunces,Georgia,serif;font-size:clamp(46px,6.4vw,76px);font-weight:500;margin:18px 0 22px;max-width:680px}
+    .lead{font-size:18px;line-height:1.7;color:#505366;max-width:620px;margin-bottom:29px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .offer{border:1px solid var(--ink);padding:35px;background:#f2f0e8}
+    .offer-label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+    .offer-number{font-family:Fraunces,Georgia,serif;font-size:100px;line-height:1;color:var(--ink);margin:18px 0 5px;letter-spacing:-.08em}
+    .offer-number span{font-family:Inter,Arial,sans-serif;font-size:24px;letter-spacing:0}
+    .offer h2{font-size:25px;margin:0 0 14px}
+    .offer p{color:#505366;margin:0}
+    section.content{padding:76px 0}
+    .section-heading{max-width:650px;margin-bottom:36px}
+    h2{font-family:Fraunces,Georgia,serif;font-size:clamp(32px,4vw,47px);font-weight:500;margin-bottom:17px}
+    .section-heading p{color:var(--muted);font-size:16px}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .step{padding:27px 26px 30px 0}
+    .step+.step{border-left:1px solid var(--line);padding-left:26px}
+    .step-num{font-size:12px;letter-spacing:.12em;font-weight:700;color:#8a642d}
+    .step h3{font-family:Fraunces,Georgia,serif;font-size:25px;font-weight:500;margin:15px 0 10px}
+    .step p{font-size:14px;color:var(--muted);margin:0}
+    .details{display:grid;grid-template-columns:.8fr 1.2fr;gap:80px}
+    .details h2{max-width:400px}
+    .detail-copy p{color:var(--muted)}
+    .note{border-left:2px solid var(--saffron);padding:2px 0 2px 18px;color:var(--ink)!important}
+    .form-wrap{background:#efeee7;padding:clamp(24px,4vw,44px);display:grid;grid-template-columns:.8fr 1.2fr;gap:55px}
+    .form-wrap h2{font-size:38px}
+    .form-intro p{color:var(--muted)}
+    form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    label{font-size:12px;font-weight:700}
+    input,textarea{width:100%;border:1px solid #c9c9c0;background:var(--paper);padding:13px 14px;font:inherit;font-size:14px;color:var(--ink);border-radius:0}
+    input:focus,textarea:focus{outline:2px solid var(--saffron);outline-offset:1px}
+    textarea{min-height:100px;resize:vertical}
+    .form-footnote{grid-column:1/-1;font-size:12px;color:var(--muted);margin:0}
+    .form-message{grid-column:1/-1;font-size:13px;color:var(--ink);margin:0}
+    footer{border-top:1px solid var(--line);padding:27px 0}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .footer-note{font-size:12px;color:var(--muted);margin:0}
+    .footer-links{display:flex;gap:18px;font-size:12px}
+    .footer-links a{text-decoration:none}
+    @media(max-width:760px){.container{width:min(100% - 32px,1120px)}.nav{min-height:70px;align-items:flex-start;padding:18px 0;flex-direction:column;gap:14px}.nav-links{flex-wrap:wrap;gap:14px 20px}.hero{padding:58px 0}.hero-grid,.details,.form-wrap{grid-template-columns:1fr;gap:32px}.offer{padding:27px}.offer-number{font-size:82px}.steps{grid-template-columns:1fr}.step,.step+.step{padding:22px 0;border-left:0}.step+.step{border-top:1px solid var(--line)}section.content{padding:55px 0}.footer-inner{align-items:flex-start;flex-direction:column}form{grid-template-columns:1fr}.field.full,.form-footnote,.form-message{grid-column:auto}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="wordmark" href="/" aria-label="TaxReady Books home">
+        <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 11.5h8M8 15h4"/><path d="m14.8 15 1.2 1.2 2.4-2.7"/></svg></span>
+        <span>TaxReady Books</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/#services">Services</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/#about">About</a>
+        <a href="/#reviews">Reviews</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">The TaxReady Books referral program</div>
+          <h1>Good referrals should be good for everyone.</h1>
+          <p class="lead">Know a business owner who could use clearer books? Introduce them to TaxReady Books. When they become a bookkeeping client, you both receive an ongoing 10% discount on bookkeeping services.</p>
+          <div class="actions"><a class="button" href="#refer">Refer a business</a><a class="button secondary" href="/#services">Explore services</a></div>
+        </div>
+        <aside class="offer" aria-label="Referral offer">
+          <div class="offer-label">For both of you</div>
+          <div class="offer-number">10<span>% off</span></div>
+          <h2>Ongoing bookkeeping savings</h2>
+          <p>The person making the referral and the new client both receive the discount after the referred business starts bookkeeping services.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="content">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Three simple steps</div>
+          <h2>Make an introduction. We’ll take it from there.</h2>
+          <p>No complicated referral links to manage. Send us the details below, and we’ll follow up about the introduction.</p>
+        </div>
+        <div class="steps">
+          <article class="step"><div class="step-num">01 / INTRODUCE</div><h3>Tell us who to contact</h3><p>Share your details and the business owner’s contact information using the referral form.</p></article>
+          <article class="step"><div class="step-num">02 / GET CONNECTED</div><h3>We’ll follow up</h3><p>We’ll contact the business owner to discuss their bookkeeping needs, with their permission.</p></article>
+          <article class="step"><div class="step-num">03 / BOTH SAVE</div><h3>Enjoy 10% off</h3><p>When the referred business becomes a bookkeeping client, both of you receive an ongoing 10% discount on bookkeeping services.</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="content" style="background:#f2f0e8">
+      <div class="container details">
+        <div><div class="eyebrow">A straightforward thank-you</div><h2>Share a service you trust.</h2></div>
+        <div class="detail-copy">
+          <p>TaxReady Books helps small businesses keep their QuickBooks Online records organized, reconciled, and ready for tax time. If someone in your network needs bookkeeping support, an introduction can help them find the right next step.</p>
+          <p class="note"><strong>How the discount works:</strong> the referral discount is 10% for both the referrer and the new client, and is intended to continue for as long as each remains a bookkeeping client. It applies to bookkeeping service fees, not tax preparation or tax advice, which TaxReady Books does not provide.</p>
+          <p>Please make sure the person you refer is happy for you to share their contact details with us.</p>
+        </div>
+      </div>
+    </section>
+    <section class="content" id="refer">
+      <div class="container form-wrap">
+        <div class="form-intro">
+          <div class="eyebrow">Start a referral</div>
+          <h2>Who should we meet?</h2>
+          <p>Fill in what you know. Your email app will open with the referral details ready to send to our team.</p>
+          <p><strong>Prefer email?</strong><br><a class="text-link" href="mailto:dipakkhadka.books@gmail.com">dipakkhadka.books@gmail.com</a></p>
+        </div>
+        <form id="referral-form">
+          <div class="field"><label for="your-name">Your name *</label><input id="your-name" name="yourName" autocomplete="name" required></div>
+          <div class="field"><label for="your-email">Your email *</label><input id="your-email" name="yourEmail" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="business-name">Referred business / person *</label><input id="business-name" name="businessName" required></div>
+          <div class="field"><label for="business-email">Their email or phone</label><input id="business-email" name="businessContact" placeholder="Only if they’ve agreed to share it"></div>
+          <div class="field full"><label for="notes">Anything we should know? (optional)</label><textarea id="notes" name="notes" placeholder="A little about their bookkeeping needs"></textarea></div>
+          <p class="form-footnote">By submitting, you confirm the person you refer has agreed to have their contact information shared with TaxReady Books. This form opens your email app and does not submit information to a website database.</p>
+          <button class="button field full" type="submit">Prepare referral email</button>
+          <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="container footer-inner">
+      <a class="wordmark" href="/"><span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 11.5h8M8 15h4"/><path d="m14.8 15 1.2 1.2 2.4-2.7"/></svg></span><span>TaxReady Books</span></a>
+      <p class="footer-note">Bookkeeping services only. I do not prepare tax returns or give tax advice.</p>
+      <div class="footer-links"><a href="/">Home</a><a href="/#contact">Contact</a></div>
+    </div>
+  </footer>
+  <script>
+    document.getElementById('referral-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const value = key => String(data.get(key) || '').trim();
+      const subject = 'TaxReady Books referral: ' + value('businessName');
+      const body = [
+        'TaxReady Books Referral',
+        '',
+        'Referrer name: ' + value('yourName'),
+        'Referrer email: ' + value('yourEmail'),
+        'Referred business/person: ' + value('businessName'),
+        'Referred contact: ' + (value('businessContact') || 'Not provided'),
+        'Notes: ' + (value('notes') || 'None'),
+        '',
+        'Referral offer: ongoing 10% bookkeeping discount for both parties when the referred business becomes a bookkeeping client.'
+      ].join('\n');
+      document.getElementById('form-message').textContent = 'Your email app should open with the referral prepared. Please review and send it to complete the referral.';
+      window.location.href = 'mailto:dipakkhadka.books@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    });
+  </script>
+</body>
+</html>
