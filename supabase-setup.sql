@@ -49,6 +49,10 @@ to authenticated
 using (id = auth.uid())
 with check (id = auth.uid());
 
+-- SECURITY: authenticated users can update only full_name, never role.
+revoke update on table public.profiles from authenticated;
+grant update (full_name) on table public.profiles to authenticated;
+
 -- Admins can manage profiles.
 create policy "profiles_admin_all"
 on public.profiles for all
