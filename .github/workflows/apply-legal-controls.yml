@@ -1,0 +1,34 @@
+name: Apply legal website controls
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'referral.html'
+      - 'scripts/add-legal-controls.py'
+      - '.github/workflows/apply-legal-controls.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[legal-injected]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Apply legal controls
+        run: python scripts/add-legal-controls.py
+      - name: Commit legal controls
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html referral.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git commit -m "[legal-injected] Add legal links and consent controls"
+          git push
