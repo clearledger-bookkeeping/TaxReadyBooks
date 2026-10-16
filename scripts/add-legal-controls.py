@@ -62,6 +62,7 @@ for name in ('index.html','referral.html'):
     if not p.exists():
         continue
     s=p.read_text(encoding='utf-8')
+    s=s.replace(' citeturn1search12','')
     if 'trb-legal-controls-css' not in s:
         s=s.replace('</head>',LEGAL_CSS+'\n</head>',1)
     if 'trb-legal-controls' not in s:
@@ -70,4 +71,9 @@ for name in ('index.html','referral.html'):
         s=s.replace('</footer>',LEGAL_LINKS+'\n</footer>',1)
     p.write_text(s,encoding='utf-8')
 
-print('Legal controls applied.')
+p=ROOT/'privacy-policy.html'
+if p.exists():
+    s=p.read_text(encoding='utf-8').replace(' citeturn1search12','')
+    p.write_text(s,encoding='utf-8')
+
+print('Legal controls applied and policy markup sanitized.')
